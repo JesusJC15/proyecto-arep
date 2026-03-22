@@ -1,0 +1,13 @@
+flowchart LR
+    patient["Paciente"]
+    professional["Profesional de salud"]
+    platform["Plataforma inteligente de triaje medico"]
+    llm["Servicio LLM / Embeddings"]
+    kb["Base de conocimiento clinica"]
+    fhir["Adaptador FHIR (futuro)"]
+
+    patient -->|"Registra sintomas y consulta resultados"| platform
+    professional -->|"Revisa casos escalados"| platform
+    platform -->|"Genera recomendaciones"| llm
+    platform -->|"Recupera guias y protocolos"| kb
+    platform -.->|"Integra resumen clinico"| fhir

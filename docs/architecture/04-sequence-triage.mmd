@@ -1,0 +1,22 @@
+sequenceDiagram
+    actor Patient as Paciente
+    participant UI as Frontend Paciente
+    participant API as FastAPI
+    participant TRIAGE as Triage Module
+    participant RAG as RAG Service
+    participant VDB as Vector Store
+    participant LLM as LLM
+
+    Patient->>UI: Registra sintomas y contexto
+    UI->>API: POST /consultations
+    API-->>UI: Consulta creada
+    UI->>API: POST /consultations/{id}/triage
+    API->>TRIAGE: Ejecutar flujo de triage
+    TRIAGE->>RAG: Solicitar recomendacion fundamentada
+    RAG->>VDB: Buscar evidencia relevante
+    VDB-->>RAG: Fragmentos y fuentes
+    RAG->>LLM: Prompt con contexto clinico
+    LLM-->>RAG: Recomendacion estructurada
+    RAG-->>TRIAGE: Severidad, recomendacion, fuentes
+    TRIAGE-->>API: Resultado consolidado
+    API-->>UI: Resultado y decision final

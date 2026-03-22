@@ -1,0 +1,58 @@
+erDiagram
+    USER ||--o{ CONSULTATION : creates
+    USER ||--o{ ESCALATION_CASE : reviews
+    USER ||--|| PATIENT_PROFILE : owns
+    CONSULTATION ||--o{ SYMPTOM_ENTRY : contains
+    CONSULTATION ||--|| TRIAGE_RESULT : produces
+    CONSULTATION ||--|| RECOMMENDATION : produces
+    CONSULTATION ||--o{ EVIDENCE_SOURCE : references
+    CONSULTATION ||--o| ESCALATION_CASE : may_create
+
+    USER {
+      string id
+      string username
+      string role
+    }
+    PATIENT_PROFILE {
+      string id
+      string user_id
+      string age_range
+      string chronic_conditions
+    }
+    CONSULTATION {
+      string id
+      string patient_user_id
+      string status
+      datetime created_at
+    }
+    SYMPTOM_ENTRY {
+      string id
+      string consultation_id
+      string symptom
+      string duration
+      string intensity
+    }
+    TRIAGE_RESULT {
+      string id
+      string consultation_id
+      string severity
+      string decision
+    }
+    RECOMMENDATION {
+      string id
+      string consultation_id
+      string summary
+      string disclaimer
+    }
+    EVIDENCE_SOURCE {
+      string id
+      string consultation_id
+      string title
+      string source_type
+    }
+    ESCALATION_CASE {
+      string id
+      string consultation_id
+      string assigned_professional_id
+      string review_status
+    }

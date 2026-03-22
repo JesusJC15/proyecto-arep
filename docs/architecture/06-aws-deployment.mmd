@@ -1,0 +1,33 @@
+flowchart TB
+    subgraph edge["Capa de acceso"]
+        cf["CloudFront"]
+        s3["S3 Frontend Hosting"]
+        apigw["API Gateway"]
+    end
+
+    subgraph services["Servicios aplicacion"]
+        ecs["ECS Fargate\nFastAPI Services"]
+        rag["RAG Worker / Orchestrator"]
+    end
+
+    subgraph data["Datos y conocimiento"]
+        rds["Amazon RDS PostgreSQL"]
+        os["OpenSearch / Vector Store"]
+        bucket["S3 Corpus Clinico"]
+    end
+
+    bedrock["Amazon Bedrock"]
+    cw["CloudWatch"]
+    fhir["FHIR Adapter (futuro)"]
+
+    cf --> s3
+    cf --> apigw
+    apigw --> ecs
+    ecs --> rag
+    ecs --> rds
+    rag --> os
+    rag --> bucket
+    rag --> bedrock
+    ecs --> cw
+    rag --> cw
+    ecs -.-> fhir

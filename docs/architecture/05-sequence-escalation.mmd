@@ -1,0 +1,16 @@
+sequenceDiagram
+    actor Patient as Paciente
+    participant API as FastAPI
+    participant TRIAGE as Triage Module
+    participant CASES as Professional Cases
+    participant PROF as Frontend Profesional
+
+    Patient->>API: Solicita resultado de consulta
+    API->>TRIAGE: Evaluar umbral de riesgo
+    TRIAGE->>CASES: Crear caso escalado
+    TRIAGE-->>API: Estado escalated
+    API-->>Patient: Informar remision a profesional
+    PROF->>API: GET /professional/cases
+    API->>CASES: Obtener casos pendientes
+    CASES-->>API: Lista de casos escalados
+    API-->>PROF: Casos con evidencia y recomendacion

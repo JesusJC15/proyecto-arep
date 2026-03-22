@@ -1,0 +1,22 @@
+flowchart TD
+    api["FastAPI Router"]
+    auth["Auth Module"]
+    consultations["Consultations Module"]
+    triage["Triage Module"]
+    rag["RAG Module"]
+    evidence["Evidence Module"]
+    audit["Audit Module"]
+    repo["Repository Layer"]
+
+    api --> auth
+    api --> consultations
+    api --> triage
+    api --> rag
+    api --> evidence
+    api --> audit
+    auth --> repo
+    consultations --> repo
+    triage --> repo
+    rag --> evidence
+    evidence --> repo
+    audit --> repo

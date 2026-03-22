@@ -1,0 +1,354 @@
+\documentclass[conference]{IEEEtran}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{longtable}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  citecolor=blue,
+  urlcolor=blue
+}
+
+\title{Arquitectura de una Plataforma Inteligente de Triaje Medico Modular Basada en IA, RAG y Arquitecturas Cloud}
+
+\author{
+\IEEEauthorblockN{Natalia Espitia Espinel, Jesus Alberto Jauregui Conde, Mayerlly Suarez Correa}
+\IEEEauthorblockA{Programa de Ingenieria de Sistemas\\
+Arquitectura Empresarial y Transformacion Digital\\
+Escuela Colombiana de Ingenieria Julio Garavito\\
+Bogota, Colombia}
+}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Los sistemas de salud de America Latina siguen enfrentando barreras estructurales de acceso, saturacion en atencion primaria y baja disponibilidad de especialistas en zonas apartadas. Como continuacion del estado del arte desarrollado en la primera entrega, este trabajo propone la arquitectura de una plataforma inteligente de triaje medico general asistida por Inteligencia Artificial. La solucion integra una aplicacion web para pacientes, un panel profesional, un backend modular basado en FastAPI y un pipeline de Retrieval-Augmented Generation (RAG) orientado a trazabilidad clinica. Se plantea una arquitectura objetivo sobre Amazon Web Services y un prototipo MVP local con almacenamiento relacional y vectorial, autenticacion por roles y un modelo de interoperabilidad futura mediante HL7 FHIR. El aporte principal del articulo es convertir la evidencia recopilada en una propuesta tecnica defendible, delimitando alcance, componentes, contratos, riesgos y decisiones de arquitectura necesarias para la siguiente fase de implementacion y evaluacion.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Salud digital, Triaje inteligente, Arquitectura empresarial, FastAPI, React, RAG, AWS, HL7 FHIR, Trazabilidad clinica
+\end{IEEEkeywords}
+
+\section{Introduccion y continuidad}
+
+La primera entrega del proyecto presento un estado del arte sobre plataformas inteligentes de consulta medica modular basadas en IA y arquitecturas cloud, identificando tres hallazgos centrales: i) la necesidad de escalar soluciones de orientacion clinica primaria en contextos de saturacion sanitaria, ii) la relevancia de arquitecturas distribuidas e interoperables para sostener ese crecimiento, y iii) el papel de las tecnicas de Retrieval-Augmented Generation (RAG) para reducir alucinaciones y aumentar la trazabilidad de las recomendaciones generadas por modelos de lenguaje \cite{martinez2017, neha2024, who2025dhea, aws2024}.
+
+Este articulo toma esa base y avanza hacia la segunda entrega del curso: la definicion de la arquitectura general y la arquitectura del prototipo. El objetivo ya no es describir el panorama tecnologico, sino traducirlo en una propuesta de solucion concreta, defendible y alineada con el contexto de la materia de Arquitectura Empresarial y Transformacion Digital.
+
+La propuesta se centra en una plataforma de triaje medico general que permita al paciente registrar sintomas y contexto basal, reciba una orientacion fundamentada en evidencia clinica y, cuando corresponda, escale el caso a un profesional de salud para revision. El sistema se concibe como un producto modular, con capacidad futura de integracion con servicios cloud, fuentes documentales curadas y adaptadores de interoperabilidad para sistemas clinicos externos.
+
+\subsection{Del estado del arte a la arquitectura propuesta}
+
+La literatura revisada muestra que el valor de los sistemas de triaje digital no depende unicamente de la precision algoritimica, sino de su capacidad para justificar recomendaciones, integrarse con procesos asistenciales y sostener crecimiento operativo \cite{martinez2017, shen2023, rodriguez2026}. A partir de esta observacion, la segunda entrega propone una arquitectura que privilegia \textbf{precision clinica y trazabilidad} como atributo de calidad dominante. Bajo este criterio, cada recomendacion generada por el sistema debe estar asociada a evidencias recuperadas, nivel de severidad estimado y una decision explicita de autocuidado o escalamiento.
+
+\section{Objetivos y alcance}
+
+\subsection{Objetivo general}
+
+Diseñar la arquitectura de una plataforma modular de triaje medico asistido por IA que combine aplicaciones web, backend orientado a servicios, almacenamiento operativo y vectorial, y un pipeline RAG orientado a recomendaciones clinicas trazables.
+
+\subsection{Objetivos especificos}
+
+\begin{itemize}[leftmargin=*]
+  \item Definir la arquitectura objetivo de la solucion en nube, identificando actores, contenedores, componentes y responsabilidades.
+  \item Delimitar un prototipo MVP academico que cubra el flujo de mayor valor clinico y permita evolucionar hacia una implementacion distribuida.
+  \item Especificar entidades, estados, endpoints y decisiones de diseño necesarias para la siguiente fase de implementacion.
+  \item Identificar riesgos, simplificaciones y restricciones de la segunda entrega, diferenciando con claridad el diseño actual de la futura evaluacion experimental.
+\end{itemize}
+
+\subsection{Alcance del MVP}
+
+El MVP se restringe al flujo:
+
+\begin{center}
+\texttt{registro de sintomas -> analisis/triage -> recomendacion fundamentada -> escalamiento a profesional}
+\end{center}
+
+Esto implica que el sistema debe permitir:
+
+\begin{itemize}[leftmargin=*]
+  \item autenticacion basica por rol (\texttt{patient} y \texttt{professional});
+  \item creacion de una consulta clinica con sintomas y contexto relevante;
+  \item ejecucion de un pipeline de triaje y recomendacion;
+  \item recuperacion de evidencia clinica desde una base de conocimiento curada;
+  \item visualizacion de casos escalados por parte del profesional.
+\end{itemize}
+
+Quedan fuera de alcance en esta fase la agenda medica, la historia clinica real, la facturacion, el monitoreo productivo, el despliegue cloud real y la validacion cuantitativa formal del sistema.
+
+\section{Requisitos del sistema}
+
+\subsection{Requisitos funcionales}
+
+La Tabla \ref{tab:functional_requirements} resume los requisitos funcionales priorizados para la segunda entrega.
+
+\begin{table*}[ht]
+\caption{Requisitos funcionales del MVP}
+\label{tab:functional_requirements}
+\centering
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{1.4cm} X}
+\toprule
+\textbf{ID} & \textbf{Descripcion} \\
+\midrule
+RF-01 & El sistema debe autenticar usuarios con rol de paciente o profesional. \\
+RF-02 & El paciente debe poder registrar sintomas, antecedentes basicos y contexto de la consulta. \\
+RF-03 & El backend debe transformar la entrada libre en un caso clinico estructurado. \\
+RF-04 & El sistema debe ejecutar un proceso de triage que estime severidad y tipo de accion recomendada. \\
+RF-05 & El sistema debe recuperar evidencia clinica desde una base documental curada antes de generar la recomendacion. \\
+RF-06 & La recomendacion debe mostrar texto orientativo, severidad estimada, fuentes utilizadas y decision de escalamiento o autocuidado. \\
+RF-07 & Los casos con severidad alta o incertidumbre relevante deben escalarse al panel profesional. \\
+RF-08 & El profesional debe visualizar casos escalados, evidencia consultada y salida generada por el sistema. \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+\subsection{Requisitos no funcionales}
+
+Los requisitos no funcionales se organizan alrededor del atributo dominante de \textit{precision clinica y trazabilidad}:
+
+\begin{itemize}[leftmargin=*]
+  \item \textbf{RNF-01 Trazabilidad}: toda salida debe registrar fuentes, version del prompt, fecha, severidad y decision tomada.
+  \item \textbf{RNF-02 Explicabilidad}: la recomendacion debe distinguir entre evidencia recuperada y conclusion generada.
+  \item \textbf{RNF-03 Modularidad}: los modulos de autenticacion, intake, triage y RAG deben evolucionar de forma desacoplada.
+  \item \textbf{RNF-04 Seguridad basica}: el prototipo debe separar roles y evitar exposicion innecesaria de datos sensibles.
+  \item \textbf{RNF-05 Extensibilidad}: la arquitectura debe permitir agregar dominios clinicos, canales y adaptadores de interoperabilidad.
+  \item \textbf{RNF-06 Preparacion cloud}: la solucion local del MVP debe mapearse con claridad a una arquitectura futura en AWS.
+\end{itemize}
+
+\section{Arquitectura general de referencia}
+
+\subsection{Actores y contexto}
+
+La solucion propuesta se organiza en torno a dos actores primarios: el paciente, que inicia la consulta y recibe una orientacion, y el profesional de salud, que atiende casos escalados o revisa recomendaciones de mayor riesgo. Adicionalmente, la plataforma interactua con un servicio de LLM y embeddings, una base de conocimiento clinica y un adaptador futuro hacia sistemas clinicos externos.
+
+Las vistas arquitectonicas completas y editables se entregan en \texttt{docs/architecture/}. La Tabla \ref{tab:views} resume dichas vistas.
+
+\begin{table*}[ht]
+\caption{Vistas arquitectonicas entregadas}
+\label{tab:views}
+\centering
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.2cm} >{\raggedright\arraybackslash}p{3.5cm} X}
+\toprule
+\textbf{Archivo} & \textbf{Tipo de vista} & \textbf{Proposito} \\
+\midrule
+\texttt{01-c4-context.mmd} & Contexto & Mostrar actores, plataforma, LLM, base documental y adaptador FHIR futuro. \\
+\texttt{02-c4-container.mmd} & Contenedores & Delimitar frontends, API, servicios de triage/RAG y persistencia. \\
+\texttt{03-backend-components.mmd} & Componentes & Detallar modulos internos del backend del MVP. \\
+\texttt{04-sequence-triage.mmd} & Secuencia & Describir el flujo principal desde sintomas hasta recomendacion. \\
+\texttt{05-sequence-escalation.mmd} & Secuencia & Describir el flujo de escalamiento hacia el profesional. \\
+\texttt{06-aws-deployment.mmd} & Despliegue & Mapear la solucion objetivo sobre servicios de AWS. \\
+\texttt{07-data-model.mmd} & Modelo de datos & Representar entidades y relaciones del MVP. \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+\subsection{Contenedores principales}
+
+La arquitectura general se compone de:
+
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Frontend paciente}: aplicacion React para ingreso de sintomas, consulta de resultados y recomendaciones.
+  \item \textbf{Frontend profesional}: panel React para revision de casos escalados y evidencia recuperada.
+  \item \textbf{Backend FastAPI}: capa de orquestacion del MVP y puerta de entrada logica al sistema.
+  \item \textbf{Modulo de intake clinico}: transforma la entrada del paciente en un caso estructurado.
+  \item \textbf{Modulo de triage}: estima severidad, reglas de negocio y criterios de escalamiento.
+  \item \textbf{Modulo RAG}: prepara contexto, ejecuta retrieval, compone prompt y solicita generacion al modelo.
+  \item \textbf{Modulo de trazabilidad}: registra evidencia consultada, version de prompt y resultados.
+  \item \textbf{Persistencia operativa}: almacena usuarios, consultas, resultados y escalamiento.
+  \item \textbf{Persistencia vectorial}: soporta busqueda semantica sobre el corpus documental.
+\end{itemize}
+
+\subsection{Arquitectura cloud objetivo}
+
+La proyeccion en nube privilegia la separacion entre canales de atencion, servicios de negocio y capacidades de IA. La solucion objetivo considera hosting web con S3 y CloudFront, una puerta de entrada API, ejecucion de servicios contenedorizados en ECS Fargate, almacenamiento relacional en Amazon RDS, soporte vectorial mediante OpenSearch o extensiones vectoriales sobre PostgreSQL y un servicio de modelos equivalente a Amazon Bedrock para embeddings y generacion.
+
+Aunque la implementacion real no forma parte de esta entrega, la arquitectura cloud establece desde ahora un mapa de evolucion coherente con el curso: crecimiento horizontal del backend, separacion entre almacenamiento operativo y semantico, y observabilidad centralizada con servicios equivalentes a CloudWatch.
+
+\subsection{Trazabilidad clinica como criterio arquitectonico}
+
+El criterio dominante de diseño es la trazabilidad. En consecuencia, la arquitectura no permite que la recomendacion dependa exclusivamente de una salida generativa. Antes de responder, el sistema debe recuperar documentos relevantes, asociarlos a la consulta y conservar un rastro de que evidencia utilizo. Esta estrategia responde tanto al analisis de RAG en salud \cite{neha2024} como a la necesidad de supervision y transparencia señalada por el marco etico colombiano para IA \cite{minciencias2021}.
+
+\section{Arquitectura del prototipo MVP}
+
+\subsection{Recorte funcional}
+
+El prototipo implementa localmente solo el flujo de mayor valor academico y tecnico:
+
+\begin{enumerate}[leftmargin=*]
+  \item el paciente inicia sesion;
+  \item registra sintomas y contexto basico;
+  \item el backend crea una consulta estructurada;
+  \item el modulo de triage determina severidad preliminar;
+  \item el pipeline RAG recupera evidencia y genera recomendacion;
+  \item si el riesgo supera el umbral definido, el caso se escala;
+  \item el profesional revisa el caso escalado con su trazabilidad.
+\end{enumerate}
+
+Esta delimitacion evita inflar el prototipo con capacidades accesorias que no aportan valor a la defensa de la arquitectura, como agenda medica o integraciones hospitalarias reales.
+
+\subsection{Diferencias entre arquitectura objetivo y MVP}
+
+La Tabla \ref{tab:gap_architecture} muestra el recorte deliberado entre la arquitectura general y el prototipo.
+
+\begin{table*}[ht]
+\caption{Diferencias entre arquitectura objetivo y prototipo}
+\label{tab:gap_architecture}
+\centering
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.3cm} >{\raggedright\arraybackslash}p{4.4cm} X}
+\toprule
+\textbf{Dimension} & \textbf{Arquitectura objetivo} & \textbf{MVP local} \\
+\midrule
+Canales & Frontends web y posibilidad futura de WhatsApp/SMS & Solo web para paciente y profesional \\
+Persistencia vectorial & OpenSearch o PostgreSQL vectorial gestionado & PostgreSQL con \texttt{pgvector} planificado \\
+IA generativa & Servicio gestionado en nube con seguridad y observabilidad & Abstraccion de servicio RAG lista para integrar modelo externo \\
+Interoperabilidad & Adaptadores FHIR y conectores a sistemas clinicos & Capa conceptual no implementada \\
+Operacion & Despliegue distribuido con monitoreo y logs centralizados & Ejecucion local, sin operacion productiva \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+\subsection{Componentes del backend del MVP}
+
+Internamente, el backend se separa en los siguientes componentes:
+
+\begin{itemize}[leftmargin=*]
+  \item \textbf{auth}: emision y validacion de tokens, resolucion de rol.
+  \item \textbf{consultations}: creacion, lectura y seguimiento de consultas.
+  \item \textbf{triage}: aplicacion de reglas preliminares y coordinacion del flujo.
+  \item \textbf{rag}: recuperacion de evidencias y generacion de recomendacion.
+  \item \textbf{professional\_cases}: lectura de casos escalados.
+  \item \textbf{audit}: registro de eventos y metadata de trazabilidad.
+\end{itemize}
+
+\section{Decisiones de diseño}
+
+La Tabla \ref{tab:adr_summary} resume las decisiones de arquitectura mas relevantes adoptadas en esta segunda entrega.
+
+\begin{table*}[ht]
+\caption{Resumen ADR}
+\label{tab:adr_summary}
+\centering
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{2.2cm} >{\raggedright\arraybackslash}p{2.9cm} >{\raggedright\arraybackslash}p{3.0cm} X}
+\toprule
+\textbf{Decision} & \textbf{Alternativas} & \textbf{Justificacion} & \textbf{Impacto} \\
+\midrule
+FastAPI para backend & Spring Boot, NestJS & Reduce friccion para integrar IA, contratos REST y validacion con Pydantic. & Facilita evolucion rapida del MVP y prototipado del flujo RAG. \\
+React para frontends & Angular, SSR simple & Permite dos experiencias separadas con componentes reutilizables y bajo costo de entrada. & Mejora la claridad de canales y roles en el prototipo. \\
+JWT por roles & Sesiones simples, proveedor externo & Mantiene una seguridad basica suficiente para separar paciente y profesional. & Soporta trazabilidad por identidad y escalamiento. \\
+PostgreSQL + vectorial & Solo relacional, NoSQL + vectorial & Separa datos transaccionales de evidencia semantica con una pila conocida. & Simplifica la evolucion del MVP hacia nube sin cambiar el modelo base. \\
+RAG clinico & LLM sin grounding, reglas puras & Aumenta trazabilidad y reduce dependencia de respuestas no fundamentadas. & Refuerza el atributo de calidad dominante. \\
+FHIR conceptual & Integracion ad hoc, sin interoperabilidad & Permite alinear la propuesta con estandares de salud sin forzar una integracion inexistente. & Prepara la tercera entrega sin sobreprometer alcance. \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+\section{Modelo de datos y contratos}
+
+\subsection{Entidades principales}
+
+El modelo de datos del MVP se centra en ocho entidades:
+
+\begin{itemize}[leftmargin=*]
+  \item \textbf{User}: identidad, rol y credenciales basicas.
+  \item \textbf{PatientProfile}: informacion minima del paciente.
+  \item \textbf{Consultation}: caso clinico abierto por el paciente.
+  \item \textbf{SymptomEntry}: sintomas y observaciones reportadas.
+  \item \textbf{TriageResult}: severidad, razonamiento resumido y decision.
+  \item \textbf{Recommendation}: orientacion entregada al paciente.
+  \item \textbf{EvidenceSource}: documentos usados como soporte.
+  \item \textbf{EscalationCase}: derivacion al profesional cuando aplica.
+\end{itemize}
+
+Los estados de la consulta quedan definidos como:
+
+\begin{center}
+\texttt{submitted, triaged, recommended, escalated, reviewed}
+\end{center}
+
+\subsection{Contratos minimos de API}
+
+La Tabla \ref{tab:endpoints} resume los endpoints minimos del MVP.
+
+\begin{table*}[ht]
+\caption{Contratos API minimos}
+\label{tab:endpoints}
+\centering
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.0cm} >{\raggedright\arraybackslash}p{1.7cm} X}
+\toprule
+\textbf{Endpoint} & \textbf{Metodo} & \textbf{Responsabilidad} \\
+\midrule
+\texttt{/auth/login} & POST & Autenticar al usuario y devolver un token de sesion. \\
+\texttt{/consultations} & POST & Crear una consulta con sintomas y contexto basal. \\
+\texttt{/consultations/\{id\}} & GET & Consultar el estado completo de una consulta. \\
+\texttt{/consultations/\{id\}/triage} & POST & Ejecutar el flujo de triage y recomendacion. \\
+\texttt{/consultations/\{id\}/recommendation} & GET & Obtener la recomendacion y la evidencia asociada. \\
+\texttt{/professional/cases} & GET & Listar casos escalados pendientes de revision. \\
+\texttt{/professional/cases/\{id\}} & GET & Consultar detalle de un caso escalado. \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+\subsection{Flujo principal}
+
+El comportamiento esperado del MVP es el siguiente:
+
+\begin{enumerate}[leftmargin=*]
+  \item el paciente registra sintomas y contexto basal;
+  \item el backend normaliza el caso clinico;
+  \item el modulo de triage asigna una severidad preliminar;
+  \item el modulo RAG recupera evidencia relevante del corpus curado;
+  \item el sistema genera una recomendacion fundamentada;
+  \item la salida final incluye severidad, recomendacion, fuentes y decision de escalamiento;
+  \item el profesional accede a los casos escalados y revisa la informacion asociada.
+\end{enumerate}
+
+\section{Riesgos, limites y siguiente fase}
+
+\subsection{Riesgos}
+
+Los riesgos principales identificados son:
+
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Falsa precision}: una recomendacion redactada con seguridad aparente puede exceder la evidencia recuperada.
+  \item \textbf{Cobertura documental insuficiente}: un corpus pequeño o mal curado degradara el valor del pipeline RAG.
+  \item \textbf{Ambiguedad clinica}: sintomas generales pueden requerir protocolos especializados aun no modelados.
+  \item \textbf{Dependencia del proveedor}: la integracion futura con servicios de IA en nube puede introducir costos o restricciones no evaluadas todavia.
+\end{itemize}
+
+\subsection{Limites de la segunda entrega}
+
+Esta entrega no pretende demostrar desempeño clinico real, ni sustituir juicio medico, ni desplegar la solucion en un entorno productivo. Su finalidad es fijar una arquitectura defendible, coherente con el estado del arte y suficientemente detallada para guiar la implementacion posterior.
+
+\subsection{Trabajo para la tercera entrega}
+
+La tercera entrega debe concentrarse en:
+
+\begin{itemize}[leftmargin=*]
+  \item implementacion robusta del pipeline RAG;
+  \item evaluacion funcional y cuantitativa del prototipo;
+  \item pruebas de atributos de calidad relevantes;
+  \item integracion de observabilidad y endurecimiento de seguridad;
+  \item demostracion distribuida y, si el tiempo lo permite, despliegue en nube.
+\end{itemize}
+
+\section{Conclusiones}
+
+La arquitectura propuesta convierte los hallazgos del estado del arte en una solucion tecnica concreta para triaje medico general asistido por IA. El diseño planteado diferencia con claridad la arquitectura objetivo en nube y el alcance realista del prototipo MVP, priorizando precision clinica y trazabilidad como ejes de calidad. Esta decision conduce naturalmente al uso de un pipeline RAG, una base documental curada, una separacion modular de servicios y un mecanismo explicito de escalamiento profesional.
+
+La segunda entrega deja definido un camino implementable para el proyecto: un articulo estructurado, vistas de arquitectura editables, decisiones registradas y una base de repositorio coherente con la evolucion futura del sistema. Con ello, la siguiente fase puede concentrarse en la validacion del prototipo y en la recoleccion de evidencia empirica sobre su comportamiento.
+
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
+\end{document}

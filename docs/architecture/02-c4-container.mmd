@@ -1,0 +1,32 @@
+flowchart LR
+    subgraph channels["Canales"]
+        patient_web["Frontend paciente\nReact SPA"]
+        professional_web["Frontend profesional\nReact SPA"]
+    end
+
+    subgraph backend["Backend"]
+        api["FastAPI API"]
+        triage["Triage Orchestrator"]
+        rag["RAG Service"]
+        audit["Traceability / Audit"]
+    end
+
+    subgraph data["Persistencia"]
+        postgres["PostgreSQL"]
+        vector["pgvector / Vector Store"]
+        corpus["Corpus clinico curado"]
+    end
+
+    model["Servicio LLM"]
+    fhir["FHIR Adapter (futuro)"]
+
+    patient_web --> api
+    professional_web --> api
+    api --> triage
+    triage --> rag
+    triage --> audit
+    api --> postgres
+    rag --> vector
+    rag --> corpus
+    rag --> model
+    api -.-> fhir
