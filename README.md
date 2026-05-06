@@ -6,6 +6,7 @@ Este repositorio contiene la segunda entrega del proyecto AREP para la materia d
 
 - `paper/`: articulo IEEE en LaTeX para la segunda entrega.
 - `docs/architecture/`: diagramas editables, matriz de trazabilidad y documentacion de arquitectura.
+- `docs/writing-workshop/`: kit del taller de escritura tecnica y academica para diagnostico, reescritura y trazabilidad de cambios.
 - `adr/`: decisiones de arquitectura relevantes para el MVP y la solucion objetivo.
 - `backend/`: base del prototipo con FastAPI y contratos minimos.
 - `frontend/`: base del prototipo con React y vistas para paciente y profesional.
