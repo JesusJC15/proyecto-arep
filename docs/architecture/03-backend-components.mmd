@@ -8,10 +8,13 @@ flowchart TB
     deps["dependencies.py"]
     security["core/security.py"]
     triage_engine["services/triage_engine.py"]
-    rag_service["services/rag_service.py"]
-    repo["repositories/in_memory.py"]
+    rag["services/rag_service.py"]
+    embeddings["services/embeddings.py"]
+    repo["repositories/sql_repository.py"]
     domain["schemas/domain.py"]
-    kb["knowledge-base/clinical-guidelines"]
+    corpus["knowledge-base/corpus-manifest.json"]
+    evalset["knowledge-base/evaluation/rag-evaluation-dataset.json"]
+    index["artifacts/rag-index.json"]
 
     api_router --> meta
     api_router --> auth
@@ -22,20 +25,23 @@ flowchart TB
     consultations --> deps
     prof_cases --> deps
     deps --> security
+    deps --> repo
+    deps --> rag
 
     consultations --> triage_engine
-    consultations --> repo
-    prof_cases --> repo
-    triage_engine --> rag_service
-    triage_engine --> domain
-    rag_service --> kb
-    rag_service --> domain
+    triage_engine --> rag
+    rag --> embeddings
+    rag --> repo
+    rag --> corpus
+    rag --> index
+    rag --> domain
     repo --> domain
+    rag --> evalset
 
     classDef api fill:#E8F3FF,stroke:#0F4C81,stroke-width:1px,color:#1B263B;
     classDef service fill:#EAFBF2,stroke:#2D6A4F,stroke-width:1px,color:#0B3D2E;
     classDef data fill:#FFF5E6,stroke:#BC6C25,stroke-width:1px,color:#6F4518;
 
     class api_router,meta,auth,consultations,prof_cases,deps,security api;
-    class triage_engine,rag_service service;
-    class repo,domain,kb data;
+    class triage_engine,rag,embeddings service;
+    class repo,domain,corpus,evalset,index data;

@@ -8,6 +8,7 @@ flowchart TB
 
     subgraph services["Servicios de aplicacion"]
         ecs["ECS Fargate\nFastAPI API"]
+        ecr["Amazon ECR\nBackend image"]
         triage["Triage Engine"]
         rag["RAG Service"]
     end
@@ -25,6 +26,7 @@ flowchart TB
     cf --> s3
     cf --> apigw
     apigw --> ecs
+    ecr --> ecs
     ecs --> triage
     triage --> rag
     ecs --> rds
@@ -41,6 +43,6 @@ flowchart TB
     classDef future fill:#F7F7F7,stroke:#7A7A7A,stroke-dasharray: 4 3,color:#3E3E3E;
 
     class cf,s3,apigw edgeClass;
-    class ecs,triage,rag,bedrock,cw core;
+    class ecs,ecr,triage,rag,bedrock,cw core;
     class rds,os,bucket dataClass;
     class fhir future;

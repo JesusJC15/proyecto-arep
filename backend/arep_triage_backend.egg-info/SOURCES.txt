@@ -11,9 +11,16 @@ app/api/routes/consultations.py
 app/api/routes/meta.py
 app/api/routes/professional_cases.py
 app/core/__init__.py
+app/core/errors.py
+app/core/logging.py
+app/core/metrics.py
+app/core/rate_limit.py
 app/core/security.py
+app/core/settings.py
+app/core/tracing.py
 app/repositories/__init__.py
-app/repositories/in_memory.py
+app/repositories/base.py
+app/repositories/sql_repository.py
 app/schemas/__init__.py
 app/schemas/domain.py
 app/services/__init__.py
@@ -24,3 +31,4 @@ arep_triage_backend.egg-info/SOURCES.txt
 arep_triage_backend.egg-info/dependency_links.txt
 arep_triage_backend.egg-info/requires.txt
 arep_triage_backend.egg-info/top_level.txt
+tests/test_demo_flow.py

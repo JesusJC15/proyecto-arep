@@ -1,30 +1,62 @@
 from __future__ import annotations
 
-import base64
-import json
+from datetime import UTC, datetime, timedelta
+import hashlib
+import hmac
+import os
 
-from app.schemas.domain import UserRole
+import jwt
 
-
-def _b64encode(value: dict[str, str]) -> str:
-    raw = json.dumps(value, separators=(",", ":")).encode("utf-8")
-    return base64.urlsafe_b64encode(raw).decode("utf-8").rstrip("=")
-
-
-def _b64decode(value: str) -> dict[str, str]:
-    padding = "=" * (-len(value) % 4)
-    raw = base64.urlsafe_b64decode(f"{value}{padding}".encode("utf-8"))
-    return json.loads(raw.decode("utf-8"))
+from app.schemas.domain import TokenPayload, UserRole
 
 
-def create_demo_token(user_id: str, username: str, role: UserRole) -> str:
-    header = _b64encode({"alg": "none", "typ": "JWT"})
-    payload = _b64encode({"sub": user_id, "username": username, "role": role.value})
-    return f"{header}.{payload}."
+def hash_password(password: str) -> str:
+    salt = os.urandom(16)
+    digest = hashlib.scrypt(password.encode("utf-8"), salt=salt, n=2**14, r=8, p=1)
+    return f"scrypt${salt.hex()}${digest.hex()}"
 
 
-def decode_demo_token(token: str) -> dict[str, str]:
-    parts = token.split(".")
-    if len(parts) < 2:
-        raise ValueError("Malformed token")
-    return _b64decode(parts[1])
+def verify_password(password: str, password_hash: str) -> bool:
+    algorithm, salt_hex, digest_hex = password_hash.split("$", maxsplit=2)
+    if algorithm != "scrypt":
+        raise ValueError("Unsupported password algorithm")
+    candidate = hashlib.scrypt(
+        password.encode("utf-8"),
+        salt=bytes.fromhex(salt_hex),
+        n=2**14,
+        r=8,
+        p=1,
+    )
+    return hmac.compare_digest(candidate.hex(), digest_hex)
+
+
+def create_access_token(
+    user_id: str,
+    username: str,
+    role: UserRole,
+    secret: str,
+    algorithm: str,
+    ttl_minutes: int,
+) -> str:
+    now = datetime.now(UTC)
+    payload = {
+        "sub": user_id,
+        "username": username,
+        "role": role.value,
+        "iat": int(now.timestamp()),
+        "exp": int((now + timedelta(minutes=ttl_minutes)).timestamp()),
+        "iss": "arep-backend",
+    }
+    return jwt.encode(payload, secret, algorithm=algorithm)
+
+
+def decode_access_token(token: str, secret: str, algorithm: str) -> TokenPayload:
+    payload = jwt.decode(token, secret, algorithms=[algorithm], issuer="arep-backend")
+    return TokenPayload(
+        sub=payload["sub"],
+        username=payload["username"],
+        role=UserRole(payload["role"]),
+        iat=datetime.fromtimestamp(payload["iat"], tz=UTC),
+        exp=datetime.fromtimestamp(payload["exp"], tz=UTC),
+        iss=payload["iss"],
+    )

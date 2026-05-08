@@ -4,10 +4,11 @@ sequenceDiagram
     actor Patient as Paciente
     participant UI as Frontend Paciente
     participant API as FastAPI /consultations
-    participant Store as InMemoryStore
+    participant Store as SQLRepository
     participant TRIAGE as triage_engine
     participant RAG as rag_service
-    participant KB as Clinical Guidelines
+    participant IDX as Artifact Index
+    participant CORPUS as Corpus Curado
 
     Patient->>UI: Completa sintomas y contexto
     UI->>API: POST /consultations
@@ -18,12 +19,15 @@ sequenceDiagram
     UI->>API: POST /consultations/{id}/triage
     API->>Store: get_consultation(id)
     Store-->>API: ConsultationRecord
-    API->>TRIAGE: evaluate_consultation(consultation)
+    API->>TRIAGE: evaluate_consultation(consultation, rag_service)
     TRIAGE->>RAG: retrieve(query_terms)
-    RAG->>KB: Cargar y rankear documentos
-    KB-->>RAG: Evidencia clinica top-k
-    RAG-->>TRIAGE: evidence_sources
-    TRIAGE-->>API: triage_result + recommendation
-    API->>Store: save_triage(id, triage_result, recommendation)
+    RAG->>IDX: cargar vectores y chunks
+    RAG->>CORPUS: resolver metadatos y contenido curado
+    CORPUS-->>RAG: documentos y chunks versionados
+    RAG-->>TRIAGE: RetrievalTrace + evidence_sources rankeadas
+    TRIAGE-->>API: triage_result + recommendation + metadata RAG
+    API->>Store: save_triage(...)
+    API->>Store: record_retrieval_trace(...)
+    API->>Store: record_audit_event("rag.retrieve")
     Store-->>API: ConsultationRecord (RECOMMENDED/ESCALATED)
-    API-->>UI: Resultado con severidad, decision y fuentes
+    API-->>UI: Resultado con severidad, decision, rank y score

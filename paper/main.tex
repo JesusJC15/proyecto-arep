@@ -37,7 +37,7 @@ Mayerlly Suarez Correa \\
 \maketitle
 
 \begin{abstract}
-Los sistemas de salud de América Latina siguen enfrentando barreras estructurales de acceso, saturación en atención primaria y baja disponibilidad de especialistas en zonas apartadas. Como continuación del estado del arte desarrollado en la primera entrega, este trabajo propone la arquitectura de una plataforma inteligente de triaje médico general asistida por Inteligencia Artificial. La solución integra una aplicación web para pacientes, un panel profesional, un backend modular basado en FastAPI y un pipeline de Retrieval-Augmented Generation (RAG) orientado a trazabilidad clínica. Se plantea una arquitectura objetivo sobre Amazon Web Services y un prototipo MVP local con autenticación por roles, flujo funcional de consulta, recuperación de evidencia documental y escalamiento hacia un profesional cuando el riesgo lo exige. El aporte principal del artículo consiste en traducir la evidencia del estado del arte en una propuesta técnica defendible, acompañada de un prototipo académico observable y de una validación funcional inicial sobre cobertura de requisitos y atributos de calidad.
+Los sistemas de salud de América Latina siguen enfrentando barreras estructurales de acceso, saturación en atención primaria y baja disponibilidad de especialistas en zonas apartadas. Como continuación del estado del arte desarrollado en la primera entrega, este trabajo propone la arquitectura de una plataforma inteligente de triaje médico general asistida por Inteligencia Artificial. La solución integra una aplicación web para pacientes, un panel profesional, un backend modular basado en FastAPI y un pipeline de Retrieval-Augmented Generation (RAG) orientado a trazabilidad clínica. Se plantea una arquitectura objetivo sobre Amazon Web Services y un prototipo local reproducible mediante Docker Compose con autenticación por roles, flujo funcional de consulta, recuperación de evidencia documental y escalamiento hacia un profesional cuando el riesgo lo exige. El aporte principal del artículo consiste en traducir la evidencia del estado del arte en una propuesta técnica defendible, acompañada de un prototipo académico observable, una evaluación mínima del retrieval y un blueprint base de despliegue para nube.
 \end{abstract}
 
 \noindent\textbf{Palabras clave:} Salud digital, Triaje inteligente, Arquitectura empresarial, FastAPI, React, RAG, AWS, HL7 FHIR, Trazabilidad clínica
@@ -60,7 +60,7 @@ Sin embargo, entre esos antecedentes persiste un vacío práctico: muchas discus
 
 \subsection{Objetivo general}
 
-Diseñar la arquitectura de una plataforma modular de triaje médico asistido por IA que combine aplicaciones web, backend orientado a servicios, almacenamiento operativo y vectorial, y un pipeline RAG orientado a recomendaciones clínicas trazables.
+Diseñar la arquitectura de una plataforma modular de triaje médico asistido por IA que combine aplicaciones web, backend orientado a servicios, almacenamiento operativo, un índice semántico reproducible y un pipeline RAG orientado a recomendaciones clínicas trazables.
 
 \subsection{Objetivos específicos}
 
@@ -160,11 +160,11 @@ La Tabla \ref{tab:views} resume dichas vistas y muestra que la propuesta no se l
 
 \subsection{Contenedores principales}
 
-La arquitectura general se compone de un frontend para paciente, un frontend profesional, un backend FastAPI, un módulo de intake clínico, un módulo de triage, un módulo RAG, un módulo de trazabilidad, persistencia operativa y persistencia vectorial. La Figura \ref{fig:mvp_flow} ayuda a observar que dichos contenedores no operan como piezas aisladas, sino como una cadena de valor cuyo producto final es una recomendación fundamentada y, cuando aplica, un caso listo para revisión profesional.
+La arquitectura general se compone de un frontend para paciente, un frontend profesional, un backend FastAPI, un módulo de intake clínico, un módulo de triage, un módulo RAG, un módulo de trazabilidad, persistencia operativa y un índice semántico reproducible. La Figura \ref{fig:mvp_flow} ayuda a observar que dichos contenedores no operan como piezas aisladas, sino como una cadena de valor cuyo producto final es una recomendación fundamentada y, cuando aplica, un caso listo para revisión profesional.
 
 \subsection{Arquitectura cloud objetivo}
 
-La proyección en nube privilegia la separación entre canales de atención, servicios de negocio y capacidades de IA. La solución objetivo considera hosting web con S3 y CloudFront, una puerta de entrada API, ejecución de servicios contenedorizados en ECS Fargate, almacenamiento relacional en Amazon RDS, soporte vectorial mediante OpenSearch o extensiones vectoriales sobre PostgreSQL y un servicio de modelos equivalente a Amazon Bedrock para embeddings y generación.
+La proyección en nube privilegia la separación entre canales de atención, servicios de negocio y capacidades de IA. La solución objetivo considera hosting web con S3 y CloudFront, una puerta de entrada API, un repositorio de imágenes en Amazon ECR, ejecución de servicios contenedorizados en ECS Fargate, almacenamiento relacional en Amazon RDS, soporte vectorial mediante OpenSearch o extensiones vectoriales sobre PostgreSQL y un servicio de modelos equivalente a Amazon Bedrock para embeddings y generación.
 
 La arquitectura cloud establece desde ahora un mapa de evolución coherente con el curso: crecimiento horizontal del backend, separación entre almacenamiento operativo y semántico, y observabilidad centralizada con servicios equivalentes a CloudWatch.
 
@@ -193,10 +193,10 @@ La Tabla \ref{tab:gap_architecture} muestra el recorte deliberado entre la arqui
 \textbf{Dimension} & \textbf{Arquitectura objetivo} & \textbf{MVP local} \\
 \midrule
 Canales & Frontends web y posibilidad futura de WhatsApp/SMS & Solo web para paciente y profesional \\
-Persistencia vectorial & OpenSearch o PostgreSQL vectorial gestionado & PostgreSQL con \texttt{pgvector} planificado \\
+Persistencia vectorial & OpenSearch o PostgreSQL vectorial gestionado & Índice local reproducible con ruta futura a \texttt{pgvector} \\
 IA generativa & Servicio gestionado en nube con seguridad y observabilidad & Abstraccion de servicio RAG lista para integrar modelo externo \\
 Interoperabilidad & Adaptadores FHIR y conectores a sistemas clinicos & Capa conceptual no implementada \\
-Operacion & Despliegue distribuido con monitoreo y logs centralizados & Ejecucion local, sin operacion productiva \\
+Operacion & Despliegue distribuido con monitoreo y logs centralizados & Ejecucion local reproducible con Docker Compose y observabilidad minima \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -207,7 +207,7 @@ Operacion & Despliegue distribuido con monitoreo y logs centralizados & Ejecucio
 \begin{minipage}{0.94\textwidth}
 \small
 \textbf{Arquitectura objetivo}: canales web + servicios cloud gestionados + persistencia operativa y vectorial + adaptador FHIR. \\
-\textbf{MVP actual}: frontends React + API FastAPI + reglas de triage + RAG documental + almacenamiento en memoria y corpus curado local.
+\textbf{MVP actual}: frontends React + API FastAPI + reglas de triage + RAG documental con embeddings locales + corpus versionado + índice reproducible.
 \end{minipage}
 }
 \caption{Relacion entre la arquitectura objetivo y el recorte funcional del MVP. La figura resume la diferencia entre la solucion pensada para evolucion futura y la implementacion academica observable en el repositorio.}
@@ -220,7 +220,7 @@ Internamente, el backend se separa en auth, consultations, triage, rag y profess
 
 \subsection{Implementación observable en el repositorio}
 
-El repositorio ya materializa elementos concretos del MVP. En backend, \path{app/main.py} expone la API y registra rutas para autenticación, consultas y casos profesionales; \path{consultations.py} implementa la creación de consultas y la ejecución del triage; \path{triage_engine.py} calcula severidad a partir de intensidad y palabras clave de alerta; y \path{rag_service.py} carga el corpus curado desde \path{knowledge-base/clinical-guidelines} y recupera hasta tres fuentes relevantes para componer la recomendación. En frontend, el portal del paciente representa la captura estructurada de síntomas y la vista previa de una recomendación, mientras que el espacio profesional muestra la cola de casos escalados y la evidencia asociada.
+El repositorio ya materializa elementos concretos del MVP. En backend, \path{app/main.py} expone la API y registra rutas para autenticación, consultas y casos profesionales; \path{consultations.py} implementa la creación de consultas y la ejecución del triage; \path{triage_engine.py} calcula severidad a partir de intensidad y palabras clave de alerta; y \path{rag_service.py} carga el corpus curado desde \path{knowledge-base}, construye un índice reproducible y recupera hasta tres fuentes relevantes para componer la recomendación. En frontend, el portal del paciente representa la captura estructurada de síntomas y la vista previa de una recomendación con score y ranking de evidencia, mientras que el espacio profesional muestra la cola de casos escalados y la evidencia asociada.
 
 Esta evidencia no convierte todavía al sistema en un producto listo para producción, pero sí demuestra correspondencia entre la arquitectura propuesta y una implementación académica verificable. Esa correspondencia es importante porque evita que el artículo prometa una solución puramente conceptual sin huella técnica en el repositorio.
 
@@ -239,7 +239,7 @@ La Tabla \ref{tab:adr_summary} resume las decisiones de arquitectura más releva
 FastAPI para backend & Spring Boot, NestJS & Reduce fricción para integrar IA, contratos REST y validación con Pydantic. & Facilita evolución rápida del MVP y prototipado del flujo RAG. \\
 React para frontends & Angular, SSR simple & Permite dos experiencias separadas con componentes reutilizables y bajo costo de entrada. & Mejora la claridad de canales y roles en el prototipo. \\
 JWT por roles & Sesiones simples, proveedor externo & Mantiene una seguridad básica suficiente para separar paciente y profesional. & Soporta trazabilidad por identidad y escalamiento. \\
-PostgreSQL + vectorial & Solo relacional, NoSQL + vectorial & Separa datos transaccionales de evidencia semántica con una pila conocida. & Simplifica la evolución del MVP hacia nube sin cambiar el modelo base. \\
+SQL + índice reproducible & Solo relacional, NoSQL + vectorial & Separa datos transaccionales de evidencia semántica sin exigir infraestructura vectorial temprana. & Simplifica la evolución del MVP hacia nube y conserva la ruta futura a \texttt{pgvector}. \\
 RAG clínico & LLM sin grounding, reglas puras & Aumenta trazabilidad y reduce dependencia de respuestas no fundamentadas. & Refuerza el atributo de calidad dominante. \\
 FHIR conceptual & Integracion ad hoc, sin interoperabilidad & Permite alinear la propuesta con estandares de salud sin forzar una integracion inexistente. & Prepara la próxima entrega sin sobreprometer alcance. \\
 \bottomrule
@@ -250,9 +250,9 @@ FHIR conceptual & Integracion ad hoc, sin interoperabilidad & Permite alinear la
 
 \subsection{Entidades principales}
 
-El modelo de datos del MVP se centra en ocho entidades: \textit{User}, \textit{PatientProfile}, \textit{Consultation}, \textit{SymptomEntry}, \textit{TriageResult}, \textit{Recommendation}, \textit{EvidenceSource} y \textit{EscalationCase}. En conjunto, estas entidades permiten representar captura de síntomas, procesamiento, recomendación y transferencia del caso hacia el profesional.
+El modelo de datos del MVP se centra en entidades de usuario, consulta, síntomas, triage, recomendación, evidencia, escalamiento y trazabilidad RAG. En conjunto, estas entidades permiten representar captura de síntomas, procesamiento, recomendación, recuperación documental y transferencia del caso hacia el profesional.
 
-Los estados de la consulta quedan definidos como submitted, triaged, recommended, escalated y reviewed. Esta secuencia no solo describe un flujo técnico; también ayuda a estructurar la trazabilidad del proceso y a preparar futuras mediciones de tiempos, volumen de escalamiento y seguimiento profesional.
+Los estados de la consulta quedan definidos como submitted, recommended, escalated y reviewed. Esta secuencia no solo describe un flujo técnico; también ayuda a estructurar la trazabilidad del proceso y a preparar futuras mediciones de tiempos, volumen de escalamiento y seguimiento profesional.
 
 \subsection{Contratos mínimos de API}
 
@@ -323,10 +323,10 @@ La Tabla \ref{tab:quality_attributes} presenta una evaluacion cualitativa de atr
 \toprule
 \textbf{Atributo} & \textbf{Evidencia actual} & \textbf{Lectura critica} \\
 \midrule
-Trazabilidad & La recomendacion conserva fuentes, fecha, severidad, decision y version de prompt. & Es el atributo mejor representado en el MVP y el principal diferenciador frente a respuestas no fundamentadas. \\
+Trazabilidad & La recomendacion conserva fuentes, score, ranking, metodo, fecha, severidad, decision y version de retrieval. & Es el atributo mejor representado en el MVP y el principal diferenciador frente a respuestas no fundamentadas. \\
 Seguridad basica & El backend restringe acceso por rol y evita que un paciente consulte casos ajenos. & La separacion es suficiente para el ambito academico, pero no equivale a seguridad productiva. \\
 Modularidad & Autenticacion, consultas, triage, RAG y casos profesionales estan separados en rutas y servicios. & La estructura favorece evolucion posterior y pruebas por modulo, aunque aun no existe despliegue distribuido. \\
-Usabilidad operativa & El frontend diferencia el espacio del paciente y el del profesional segun la tarea. & La interfaz facilita comunicar el flujo, pero todavia usa datos de demostracion y requiere validacion con usuarios. \\
+Usabilidad operativa & El frontend diferencia el espacio del paciente y el del profesional segun la tarea. & La interfaz facilita comunicar el flujo y la demo ya corre sobre Compose, pero todavia requiere validacion con usuarios. \\
 Escalabilidad tecnica & La arquitectura objetivo contempla separacion cloud de canales, API y persistencias. & La escalabilidad esta defendida a nivel de diseño, no demostrada empiricamente en esta entrega. \\
 \bottomrule
 \end{tabularx}
@@ -346,11 +346,11 @@ Los riesgos principales identificados son la falsa precisión, la cobertura docu
 
 \subsection{Límites de la entrega}
 
-Esta entrega no pretende demostrar desempeño clínico real, ni sustituir juicio médico, ni desplegar la solución en un entorno productivo. Su finalidad es fijar una arquitectura defendible, coherente con el estado del arte y suficientemente detallada para guiar la implementación posterior. En consecuencia, los resultados reportados en la sección anterior deben leerse como validación funcional inicial y no como evaluación experimental definitiva.
+Esta entrega no pretende demostrar desempeño clínico real, ni sustituir juicio médico, ni desplegar la solución en un entorno productivo de nube. Su finalidad es fijar una arquitectura defendible, coherente con el estado del arte y acompañada de una demo reproducible con empaquetado local, documentación operativa y blueprint base para evolución posterior. En consecuencia, los resultados reportados en la sección anterior deben leerse como validación funcional inicial y no como evaluación experimental definitiva.
 
 \subsection{Trabajo futuro}
 
-Este debe concentrarse en implementación robusta del pipeline RAG, evaluación funcional y cuantitativa del prototipo, pruebas de atributos de calidad relevantes, integración de observabilidad y endurecimiento de seguridad, y demostración distribuida con despliegue en nube si el tiempo lo permite.
+El trabajo futuro debe concentrarse en vectorización productiva, validación clínica con expertos, endurecimiento de seguridad, despliegue real en AWS y evaluación comparativa entre embeddings locales y proveedores externos.
 
 \section{Conclusiones}
 

@@ -9,12 +9,13 @@ flowchart LR
         api["API Router"]
         authz["Dependencias de seguridad\nJWT + roles"]
         triage["Motor de triaje"]
-        rag["Servicio RAG"]
+        rag["Servicio RAG\nchunking + retrieval + ranking"]
     end
 
     subgraph data_now["Datos actuales"]
-        inmem["Repositorio en memoria"]
-        corpus["Knowledge Base\nclinical-guidelines/*.md"]
+        sql["Repositorio SQL\nconsultas + corpus + chunks"]
+        corpus["Knowledge Base\nmanifest + clinical-guidelines"]
+        index["Indice local\nartifacts/rag-index.json"]
     end
 
     subgraph data_future["Datos objetivo (evolucion)"]
@@ -29,12 +30,13 @@ flowchart LR
     professional_web --> api
     api --> authz
     api --> triage
-    api --> inmem
+    api --> sql
     triage --> rag
     rag --> corpus
+    rag --> index
     rag --> llm
-    inmem -.->|"migracion planificada"| postgres
-    rag -.->|"indexacion futura"| vector
+    sql -.->|"despliegue target"| postgres
+    rag -.->|"ruta futura"| vector
     api -.-> fhir
 
     classDef current fill:#EAFBF2,stroke:#2D6A4F,stroke-width:1px,color:#0B3D2E;
@@ -42,7 +44,7 @@ flowchart LR
     classDef future fill:#F7F7F7,stroke:#7A7A7A,stroke-dasharray: 4 3,color:#3E3E3E;
     classDef external fill:#FFF5E6,stroke:#BC6C25,stroke-width:1px,color:#6F4518;
 
-    class patient_web,professional_web,api,authz,triage,rag,inmem,corpus current;
+    class patient_web,professional_web,api,authz,triage,rag,sql,corpus,index current;
     class channels,backend,data_now edge;
     class postgres,vector,fhir,data_future future;
     class llm external;

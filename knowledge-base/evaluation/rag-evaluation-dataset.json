@@ -1,0 +1,23 @@
+{
+  "dataset_version": "2026-05-phase3",
+  "cases": [
+    {
+      "case_id": "case-medium-cough",
+      "query_terms": ["persistent cough", "moderate discomfort", "watchful waiting"],
+      "expected_document_ids": ["respiratory-watchful-waiting", "general-triage"],
+      "expected_decision": "watch_and_wait"
+    },
+    {
+      "case_id": "case-high-chest-pain",
+      "query_terms": ["chest pain", "shortness of breath", "hypertension", "rapid worsening"],
+      "expected_document_ids": ["red-flags", "chest-pain-escalation"],
+      "expected_decision": "professional_review"
+    },
+    {
+      "case_id": "case-low-self-care",
+      "query_terms": ["mild discomfort", "rest", "hydration", "stable symptoms"],
+      "expected_document_ids": ["self-care-boundaries", "hydration-and-rest"],
+      "expected_decision": "self_care"
+    }
+  ]
+}

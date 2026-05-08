@@ -1,6 +1,6 @@
 # Diagramas de Arquitectura
 
-Este directorio contiene las vistas editables de la segunda entrega. Todas las vistas se mantienen en formato Mermaid para facilitar edicion, trazabilidad y exportacion posterior.
+Este directorio contiene las vistas editables del proyecto AREP. Todas las vistas se mantienen en formato Mermaid para facilitar edicion, trazabilidad y exportacion posterior.
 
 ## Archivos
 
@@ -17,10 +17,12 @@ Este directorio contiene las vistas editables de la segunda entrega. Todas las v
 
 1. Revisar primero el contexto y contenedores.
 2. Alinear los diagramas con el articulo en `paper/main.tex`.
-3. Exportar a PNG o PDF con Mermaid CLI si se requiere insertar figuras en una version final del articulo.
+3. Contrastar los diagramas con `docs/rag-evaluation.md` y `knowledge-base/corpus-manifest.json`.
+4. Contrastar la proyeccion cloud con `infra/aws/README.md` y el `docker-compose.yml` oficial.
+5. Exportar a PNG o PDF con Mermaid CLI si se requiere insertar figuras en una version final del articulo.
 
 ## Convenciones
 
 - `patient` y `professional` son los unicos roles del MVP.
 - `FHIR Adapter` se mantiene como componente futuro, no implementado.
-- `RAG Service` representa una abstraccion que luego podra conectarse a un proveedor real de embeddings y generacion.
+- `RAG Service` ya representa un pipeline real con corpus curado, chunking, embeddings locales e indice reproducible.

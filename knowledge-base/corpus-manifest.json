@@ -1,0 +1,89 @@
+{
+  "corpus_version": "2026-05-phase3",
+  "documents": [
+    {
+      "document_id": "general-triage",
+      "path": "clinical-guidelines/general-triage.md",
+      "title": "General Triage Orientation",
+      "source_type": "academic_synthesis",
+      "source_uri": "knowledge-base/clinical-guidelines/general-triage.md",
+      "clinical_topic": "general triage",
+      "audience": "patient-and-professional-demo",
+      "publication_or_revision_date": "2026-05-08",
+      "curation_status": "curated-demo",
+      "language": "en",
+      "license_or_usage_note": "Academic synthesis for AREP demo use only.",
+      "summary": "Marco general para separar autocuidado, vigilancia y escalamiento profesional."
+    },
+    {
+      "document_id": "red-flags",
+      "path": "clinical-guidelines/red-flags.md",
+      "title": "Red Flags for Escalation",
+      "source_type": "academic_synthesis",
+      "source_uri": "knowledge-base/clinical-guidelines/red-flags.md",
+      "clinical_topic": "red flags",
+      "audience": "patient-and-professional-demo",
+      "publication_or_revision_date": "2026-05-08",
+      "curation_status": "curated-demo",
+      "language": "en",
+      "license_or_usage_note": "Academic synthesis for AREP demo use only.",
+      "summary": "Patrones de dolor toracico, dificultad respiratoria y empeoramiento rapido que deben escalarse."
+    },
+    {
+      "document_id": "self-care-boundaries",
+      "path": "clinical-guidelines/self-care-boundaries.md",
+      "title": "Self Care Boundaries",
+      "source_type": "academic_synthesis",
+      "source_uri": "knowledge-base/clinical-guidelines/self-care-boundaries.md",
+      "clinical_topic": "self care",
+      "audience": "patient-demo",
+      "publication_or_revision_date": "2026-05-08",
+      "curation_status": "curated-demo",
+      "language": "en",
+      "license_or_usage_note": "Academic synthesis for AREP demo use only.",
+      "summary": "Lineamientos para autocuidado cuando no hay signos de alarma ni progresion clinica preocupante."
+    },
+    {
+      "document_id": "respiratory-watchful-waiting",
+      "path": "clinical-guidelines/respiratory-watchful-waiting.md",
+      "title": "Respiratory Watchful Waiting",
+      "source_type": "academic_synthesis",
+      "source_uri": "knowledge-base/clinical-guidelines/respiratory-watchful-waiting.md",
+      "clinical_topic": "respiratory monitoring",
+      "audience": "patient-demo",
+      "publication_or_revision_date": "2026-05-08",
+      "curation_status": "curated-demo",
+      "language": "en",
+      "license_or_usage_note": "Academic synthesis for AREP demo use only.",
+      "summary": "Criterios para tos persistente, fiebre moderada y vigilancia estrecha sin alarma inmediata."
+    },
+    {
+      "document_id": "chest-pain-escalation",
+      "path": "clinical-guidelines/chest-pain-escalation.md",
+      "title": "Chest Pain Escalation Signals",
+      "source_type": "academic_synthesis",
+      "source_uri": "knowledge-base/clinical-guidelines/chest-pain-escalation.md",
+      "clinical_topic": "cardiorespiratory escalation",
+      "audience": "professional-demo",
+      "publication_or_revision_date": "2026-05-08",
+      "curation_status": "curated-demo",
+      "language": "en",
+      "license_or_usage_note": "Academic synthesis for AREP demo use only.",
+      "summary": "Escenarios de dolor toracico, opresion y fatiga con disnea que justifican revision profesional."
+    },
+    {
+      "document_id": "hydration-and-rest",
+      "path": "clinical-guidelines/hydration-and-rest.md",
+      "title": "Hydration and Rest Guidance",
+      "source_type": "academic_synthesis",
+      "source_uri": "knowledge-base/clinical-guidelines/hydration-and-rest.md",
+      "clinical_topic": "self care support",
+      "audience": "patient-demo",
+      "publication_or_revision_date": "2026-05-08",
+      "curation_status": "curated-demo",
+      "language": "en",
+      "license_or_usage_note": "Academic synthesis for AREP demo use only.",
+      "summary": "Consejos de soporte basico para sintomas leves sin signos de deterioro."
+    }
+  ]
+}

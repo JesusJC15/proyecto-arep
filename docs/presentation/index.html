@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AREP - Sustentacion final</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/theme/white.css" />
+    <style>
+      :root {
+        --accent: #0f4c81;
+        --soft: #e8f3ff;
+        --ink: #1b263b;
+      }
+      .reveal {
+        color: var(--ink);
+      }
+      .reveal h1, .reveal h2, .reveal h3 {
+        color: var(--accent);
+      }
+      .card {
+        background: var(--soft);
+        border-left: 6px solid var(--accent);
+        padding: 1rem 1.2rem;
+        border-radius: 0.4rem;
+      }
+      .small {
+        font-size: 0.8em;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section>
+          <h1>AREP</h1>
+          <h3>Plataforma academica de triaje con RAG trazable</h3>
+          <p class="small">Entrega final integral: demo reproducible, blueprint AWS y paquete academico</p>
+        </section>
+        <section>
+          <h2>Problema</h2>
+          <div class="card">
+            <p>La orientacion inicial en salud necesita triage claro, evidencia recuperable y supervision humana en casos de mayor riesgo.</p>
+          </div>
+        </section>
+        <section>
+          <h2>Propuesta</h2>
+          <ul>
+            <li>Portal paciente y espacio profesional</li>
+            <li>Triage por reglas con escalamiento</li>
+            <li>RAG semantico local, trazable y evaluable</li>
+            <li>Demo reproducible con Docker Compose</li>
+          </ul>
+        </section>
+        <section>
+          <h2>Arquitectura</h2>
+          <ul>
+            <li>Frontend React</li>
+            <li>Backend FastAPI con JWT, auditoria y metricas</li>
+            <li>Postgres como base oficial de demo</li>
+            <li>Corpus curado + indice RAG reproducible</li>
+          </ul>
+        </section>
+        <section>
+          <h2>Flujo de demo</h2>
+          <ol>
+            <li>Paciente inicia sesion</li>
+            <li>Crea consulta y ejecuta triage</li>
+            <li>Recibe recomendacion con evidencia, score y rank</li>
+            <li>Profesional toma el caso y lo revisa</li>
+          </ol>
+        </section>
+        <section>
+          <h2>RAG y trazabilidad</h2>
+          <ul>
+            <li>Corpus versionado con manifiesto curatorial</li>
+            <li>Chunking reproducible</li>
+            <li>Embeddings locales por defecto</li>
+            <li>Score, rank, metodo y razon de recuperacion por fuente</li>
+          </ul>
+        </section>
+        <section>
+          <h2>Resultados</h2>
+          <ul>
+            <li>Backend tests y E2E automatizado</li>
+            <li>Top-1 hit: 2/3</li>
+            <li>Top-k hit: 3/3</li>
+            <li>Observabilidad operativa: health, ready, metrics, rag/status</li>
+          </ul>
+        </section>
+        <section>
+          <h2>Entrega final</h2>
+          <ul>
+            <li>Dockerfiles + docker-compose oficial</li>
+            <li>Runbook y guion de demo</li>
+            <li>README maestro fuerte</li>
+            <li>Blueprint AWS base para red, app y datos</li>
+          </ul>
+        </section>
+        <section>
+          <h2>Limites</h2>
+          <ul>
+            <li>No es un sistema clinico productivo</li>
+            <li>No hay despliegue real en AWS en esta fase</li>
+            <li>No hay validacion clinica formal</li>
+            <li>FHIR sigue siendo proyeccion</li>
+          </ul>
+        </section>
+        <section>
+          <h2>Roadmap</h2>
+          <ul>
+            <li>Vector store productivo o pgvector</li>
+            <li>Secret management y hardening</li>
+            <li>Despliegue cloud real</li>
+            <li>Validacion con expertos y usuarios</li>
+          </ul>
+        </section>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.js"></script>
+    <script>
+      Reveal.initialize({
+        hash: true,
+        slideNumber: true
+      });
+    </script>
+  </body>
+  </html>
