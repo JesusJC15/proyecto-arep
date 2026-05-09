@@ -3,9 +3,12 @@ from __future__ import annotations
 import json
 import os
 from pathlib import Path
+from uuid import uuid4
 
 from fastapi.testclient import TestClient
 import pytest
+from sqlalchemy import create_engine, text
+from sqlalchemy.engine import make_url
 
 from app.core.security import create_access_token, hash_password
 from app.core.settings import Settings
@@ -19,7 +22,16 @@ def client(request: pytest.FixtureRequest, tmp_path: Path) -> TestClient:
     postgres_url = os.getenv("TEST_POSTGRES_URL")
     if request.param == "postgres" and not postgres_url:
         pytest.skip("TEST_POSTGRES_URL is not configured")
-    database_url = postgres_url if request.param == "postgres" else f"sqlite:///{(tmp_path / 'arep_test.sqlite3').as_posix()}"
+    admin_engine = None
+    schema_name = None
+    if request.param == "postgres":
+        schema_name = f"arep_test_{uuid4().hex}"
+        admin_engine = create_engine(postgres_url, future=True, isolation_level="AUTOCOMMIT")
+        with admin_engine.connect() as connection:
+            connection.execute(text(f'CREATE SCHEMA "{schema_name}"'))
+        database_url = _postgres_url_with_schema(postgres_url, schema_name)
+    else:
+        database_url = f"sqlite:///{(tmp_path / 'arep_test.sqlite3').as_posix()}"
     settings = Settings(
         environment="test",
         database_url=database_url,
@@ -32,8 +44,21 @@ def client(request: pytest.FixtureRequest, tmp_path: Path) -> TestClient:
         mutation_rate_limit_count=20,
         mutation_rate_limit_window_seconds=60,
     )
-    with TestClient(create_app(settings)) as test_client:
-        yield test_client
+    try:
+        with TestClient(create_app(settings)) as test_client:
+            yield test_client
+    finally:
+        if admin_engine is not None and schema_name is not None:
+            with admin_engine.connect() as connection:
+                connection.execute(text(f'DROP SCHEMA IF EXISTS "{schema_name}" CASCADE'))
+            admin_engine.dispose()
+
+
+def _postgres_url_with_schema(base_url: str, schema_name: str) -> str:
+    url = make_url(base_url)
+    query = dict(url.query)
+    query["options"] = f"-csearch_path={schema_name}"
+    return url.update_query_dict(query).render_as_string(hide_password=False)
 
 
 def login(client: TestClient, username: str, password: str, role: str) -> str:

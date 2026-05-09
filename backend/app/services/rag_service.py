@@ -42,7 +42,7 @@ class RAGService:
     def __init__(self, store: Repository, settings: Settings) -> None:
         self.store = store
         self.settings = settings
-        self.root = Path(__file__).resolve().parents[3]
+        self.root = self._resolve_project_root()
         self.knowledge_base_root = self.root / "knowledge-base"
         self.manifest_path = self.knowledge_base_root / "corpus-manifest.json"
         self.index_artifact_path = (self.root / self.settings.rag_index_artifact_path).resolve()
@@ -247,3 +247,12 @@ class RAGService:
             if start + self.settings.rag_chunk_size >= len(words):
                 break
         return chunks
+
+    def _resolve_project_root(self) -> Path:
+        current = Path(__file__).resolve()
+        for candidate in (current.parent, *current.parents):
+            if (candidate / "knowledge-base" / "corpus-manifest.json").exists():
+                return candidate
+        raise FileNotFoundError(
+            "knowledge-base/corpus-manifest.json was not found from the current backend runtime layout"
+        )

@@ -5,12 +5,13 @@ ENV PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
-COPY pyproject.toml ./
-COPY app ./app
-COPY scripts ./scripts
+COPY backend/pyproject.toml ./
+COPY backend/app ./app
+COPY backend/scripts ./scripts
+COPY knowledge-base ./knowledge-base
 RUN pip install --no-cache-dir --upgrade pip && pip install --no-cache-dir -e .
 
-RUN adduser --disabled-password --gecos "" arep
+RUN mkdir -p /app/runtime && adduser --disabled-password --gecos "" arep && chown -R arep:arep /app
 USER arep
 
 EXPOSE 8000
