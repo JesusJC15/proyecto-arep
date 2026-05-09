@@ -8,14 +8,27 @@
 \usepackage{tabularx}
 \usepackage{array}
 \usepackage{enumitem}
+\usepackage{float}
 \usepackage{hyperref}
 \usepackage{longtable}
+\usepackage[section]{placeins}
 
 \hypersetup{
   colorlinks=true,
   linkcolor=blue,
   citecolor=blue,
   urlcolor=blue
+}
+
+\graphicspath{{../diagrams/}}
+
+\newcommand{\paperdiagram}[3]{
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth,height=0.74\textheight,keepaspectratio]{#1}
+\caption{#2}
+\label{#3}
+\end{figure}
 }
 
 \title{Arquitectura de una Plataforma Inteligente de Triaje Médico Modular Basada en IA, RAG y Arquitecturas Cloud}
@@ -128,45 +141,46 @@ La Tabla \ref{tab:views} resume dichas vistas y muestra que la propuesta no se l
 \caption{Vistas arquitectonicas entregadas}
 \label{tab:views}
 \centering
+\small
 \begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.2cm} >{\raggedright\arraybackslash}p{3.5cm} X}
 \toprule
 \textbf{Archivo} & \textbf{Tipo de vista} & \textbf{Proposito} \\
 \midrule
-\path{01-c4-context.mmd} & Contexto & Mostrar actores, plataforma, LLM, base documental y adaptador FHIR futuro. \\
-\path{02-c4-container.mmd} & Contenedores & Delimitar frontends, API, servicios de triage/RAG y persistencia. \\
-\path{03-backend-components.mmd} & Componentes & Detallar modulos internos del backend del MVP. \\
-\path{04-sequence-triage.mmd} & Secuencia & Describir el flujo principal desde sintomas hasta recomendacion. \\
-\path{05-sequence-escalation.mmd} & Secuencia & Describir el flujo de escalamiento hacia el profesional. \\
-\path{06-aws-deployment.mmd} & Despliegue & Mapear la solucion objetivo sobre servicios de AWS. \\
-\path{07-data-model.mmd} & Modelo de datos & Representar entidades y relaciones del MVP. \\
+\texttt{01} Contexto & Contexto & Mostrar actores, plataforma, LLM, base documental y adaptador FHIR futuro. \\
+\texttt{02} Contenedores & Contenedores & Delimitar frontends, API, servicios de triage/RAG y persistencia. \\
+\texttt{03} Backend & Componentes & Detallar modulos internos del backend del MVP. \\
+\texttt{04} Triage & Secuencia & Describir el flujo principal desde sintomas hasta recomendacion. \\
+\texttt{05} Escalamiento & Secuencia & Describir el flujo de escalamiento hacia el profesional. \\
+\texttt{06} AWS & Despliegue & Mapear la solucion objetivo sobre servicios de AWS. \\
+\texttt{07} Datos & Modelo de datos & Representar entidades y relaciones del MVP. \\
 \bottomrule
 \end{tabularx}
 \end{table}
 
-\begin{figure}[ht]
-\centering
-\fbox{
-\begin{minipage}{0.94\textwidth}
-\small
-\centering
-\textbf{Paciente} $\rightarrow$ \textbf{Portal web} $\rightarrow$ \textbf{API FastAPI} $\rightarrow$ \textbf{Triage} $\rightarrow$ \textbf{RAG} $\rightarrow$ \textbf{Recomendacion con evidencia} \\
-\vspace{0.2cm}
-\textbf{Si severidad alta o incertidumbre relevante}: \textbf{API FastAPI} $\rightarrow$ \textbf{Escalation Case} $\rightarrow$ \textbf{Panel profesional}
-\end{minipage}
-}
-\caption{Esquema sintético del flujo principal del MVP.}
-\label{fig:mvp_flow}
-\end{figure}
+\paperdiagram
+  {01-c4-context.png}
+  {Vista de contexto de la plataforma de triaje, sus actores primarios y dependencias externas del ecosistema propuesto.}
+  {fig:c4_context}
 
 \subsection{Contenedores principales}
 
-La arquitectura general se compone de un frontend para paciente, un frontend profesional, un backend FastAPI, un módulo de intake clínico, un módulo de triage, un módulo RAG, un módulo de trazabilidad, persistencia operativa y un índice semántico reproducible. La Figura \ref{fig:mvp_flow} ayuda a observar que dichos contenedores no operan como piezas aisladas, sino como una cadena de valor cuyo producto final es una recomendación fundamentada y, cuando aplica, un caso listo para revisión profesional.
+La arquitectura general se compone de un frontend para paciente, un frontend profesional, un backend FastAPI, un módulo de intake clínico, un módulo de triage, un módulo RAG, un módulo de trazabilidad, persistencia operativa y un índice semántico reproducible. La Figura \ref{fig:c4_container} ayuda a observar que dichos contenedores no operan como piezas aisladas, sino como una cadena de valor cuyo producto final es una recomendación fundamentada y, cuando aplica, un caso listo para revisión profesional.
+
+\paperdiagram
+  {02-c4-container.png}
+  {Vista de contenedores del MVP y de sus principales dependencias de persistencia, retrieval e interfaces de usuario.}
+  {fig:c4_container}
 
 \subsection{Arquitectura cloud objetivo}
 
 La proyección en nube privilegia la separación entre canales de atención, servicios de negocio y capacidades de IA. La solución objetivo considera hosting web con S3 y CloudFront, una puerta de entrada API, un repositorio de imágenes en Amazon ECR, ejecución de servicios contenedorizados en ECS Fargate, almacenamiento relacional en Amazon RDS, soporte vectorial mediante OpenSearch o extensiones vectoriales sobre PostgreSQL y un servicio de modelos equivalente a Amazon Bedrock para embeddings y generación.
 
 La arquitectura cloud establece desde ahora un mapa de evolución coherente con el curso: crecimiento horizontal del backend, separación entre almacenamiento operativo y semántico, y observabilidad centralizada con servicios equivalentes a CloudWatch.
+
+\paperdiagram
+  {06-aws-deployment.png}
+  {Vista de despliegue objetivo sobre AWS, alineada con la evolución futura del MVP hacia una arquitectura gestionada y observable.}
+  {fig:aws_deployment}
 
 \subsection{Trazabilidad clínica como criterio arquitectónico}
 
@@ -201,22 +215,14 @@ Operacion & Despliegue distribuido con monitoreo y logs centralizados & Ejecucio
 \end{tabularx}
 \end{table}
 
-\begin{figure}[ht]
-\centering
-\fbox{
-\begin{minipage}{0.94\textwidth}
-\small
-\textbf{Arquitectura objetivo}: canales web + servicios cloud gestionados + persistencia operativa y vectorial + adaptador FHIR. \\
-\textbf{MVP actual}: frontends React + API FastAPI + reglas de triage + RAG documental con embeddings locales + corpus versionado + índice reproducible.
-\end{minipage}
-}
-\caption{Relacion entre la arquitectura objetivo y el recorte funcional del MVP. La figura resume la diferencia entre la solucion pensada para evolucion futura y la implementacion academica observable en el repositorio.}
-\label{fig:target_vs_mvp}
-\end{figure}
-
 \subsection{Componentes del backend del MVP}
 
-Internamente, el backend se separa en auth, consultations, triage, rag y professional\_cases. Esta organización hace visible una primera decisión de modularidad: autenticación, reglas de severidad, recuperación documental y lectura de casos escalados no comparten una única pieza monolítica, sino responsabilidades diferenciadas que luego podrán migrar hacia una arquitectura más distribuida.
+Internamente, el backend se separa en auth, consultations, triage, rag y professional\_cases. Esta organización hace visible una primera decisión de modularidad: autenticación, reglas de severidad, recuperación documental y lectura de casos escalados no comparten una única pieza monolítica, sino responsabilidades diferenciadas que luego podrán migrar hacia una arquitectura más distribuida. La Figura \ref{fig:backend_components} muestra con mayor precisión este despiece interno del backend.
+
+\paperdiagram
+  {03-backend-components.png}
+  {Descomposición de componentes del backend del MVP, con separación entre autenticación, consultas, triage, retrieval y gestión profesional.}
+  {fig:backend_components}
 
 \subsection{Implementación observable en el repositorio}
 
@@ -232,6 +238,7 @@ La Tabla \ref{tab:adr_summary} resume las decisiones de arquitectura más releva
 \caption{Resumen ADR}
 \label{tab:adr_summary}
 \centering
+\footnotesize
 \begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{2.2cm} >{\raggedright\arraybackslash}p{2.9cm} >{\raggedright\arraybackslash}p{3.0cm} X}
 \toprule
 \textbf{Decisión} & \textbf{Alternativas} & \textbf{Justificación} & \textbf{Impacto} \\
@@ -254,6 +261,11 @@ El modelo de datos del MVP se centra en entidades de usuario, consulta, síntoma
 
 Los estados de la consulta quedan definidos como submitted, recommended, escalated y reviewed. Esta secuencia no solo describe un flujo técnico; también ayuda a estructurar la trazabilidad del proceso y a preparar futuras mediciones de tiempos, volumen de escalamiento y seguimiento profesional.
 
+\paperdiagram
+  {07-data-model.png}
+  {Modelo de datos del MVP con las entidades necesarias para trazabilidad clínica, recomendación fundamentada y escalamiento profesional.}
+  {fig:data_model}
+
 \subsection{Contratos mínimos de API}
 
 La Tabla \ref{tab:endpoints} resume los endpoints minimos del MVP.
@@ -262,6 +274,7 @@ La Tabla \ref{tab:endpoints} resume los endpoints minimos del MVP.
 \caption{Contratos API minimos}
 \label{tab:endpoints}
 \centering
+\small
 \begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.0cm} >{\raggedright\arraybackslash}p{1.7cm} X}
 \toprule
 \textbf{Endpoint} & \textbf{Método} & \textbf{Responsabilidad} \\
@@ -279,7 +292,19 @@ La Tabla \ref{tab:endpoints} resume los endpoints minimos del MVP.
 
 \subsection{Flujo principal}
 
-El comportamiento esperado del MVP es el siguiente: el paciente registra síntomas y contexto basal, el backend normaliza el caso clínico, el módulo de triage asigna una severidad preliminar, el módulo RAG recupera evidencia relevante del corpus curado, el sistema genera una recomendación fundamentada y, cuando corresponde, expone el caso al profesional con la información necesaria para su revisión. La Figura \ref{fig:mvp_flow} sintetiza este encadenamiento y evita que el lector vea los componentes como una lista desconectada.
+El comportamiento esperado del MVP es el siguiente: el paciente registra síntomas y contexto basal, el backend normaliza el caso clínico, el módulo de triage asigna una severidad preliminar, el módulo RAG recupera evidencia relevante del corpus curado, el sistema genera una recomendación fundamentada y, cuando corresponde, expone el caso al profesional con la información necesaria para su revisión. La Figura \ref{fig:sequence_triage} sintetiza este encadenamiento y evita que el lector vea los componentes como una lista desconectada.
+
+\paperdiagram
+  {04-sequence-triage.png}
+  {Secuencia principal del MVP desde el registro de síntomas hasta la recomendación con evidencia y decisión de severidad.}
+  {fig:sequence_triage}
+
+La derivación hacia revisión humana es un flujo complementario y no una nota marginal de implementación. La Figura \ref{fig:sequence_escalation} muestra cómo el sistema conserva el contexto clínico, la salida de triage y la evidencia recuperada al escalar un caso al panel profesional.
+
+\paperdiagram
+  {05-sequence-escalation.png}
+  {Secuencia de escalamiento hacia el profesional cuando la severidad o la incertidumbre superan el umbral definido.}
+  {fig:sequence_escalation}
 
 \section{Resultados y validación inicial}
 
@@ -358,6 +383,7 @@ La arquitectura propuesta convierte los hallazgos del estado del arte en una sol
 
 La validación funcional inicial muestra que el repositorio ya materializa el flujo principal del sistema mediante frontends diferenciados, una API con contratos mínimos, un motor de triage y una recuperación documental que preserva evidencia. Aunque esta base aún no demuestra calidad clínica ni rendimiento operativo, sí deja una plataforma razonable para la siguiente fase del proyecto.
 
+\FloatBarrier
 \bibliographystyle{unsrt}
 \bibliography{references}
 
