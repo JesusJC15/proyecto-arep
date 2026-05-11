@@ -1,4 +1,4 @@
-# Base de conocimiento Fase 3
+# Base de conocimiento
 
 Este directorio contiene el corpus clinico curado para el pipeline RAG academico de AREP.
 

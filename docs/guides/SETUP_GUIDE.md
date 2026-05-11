@@ -5,6 +5,7 @@ Complete step-by-step guide to set up, configure, and run the AREP platform loca
 ## Prerequisites
 
 ### System Requirements
+
 - **Docker Desktop**: Version 4.10+ ([download](https://www.docker.com/products/docker-desktop))
 - **Git**: Version 2.30+ ([download](https://git-scm.com))
 - **RAM**: Minimum 4GB recommended (8GB for smooth operation)
@@ -14,15 +15,18 @@ Complete step-by-step guide to set up, configure, and run the AREP platform loca
 ### System-Specific Notes
 
 **Windows**:
+
 - Docker Desktop requires Windows 10 Professional/Enterprise or Windows 11
 - WSL2 (Windows Subsystem for Linux 2) backend recommended
 - PowerShell or Command Prompt (cmd) for terminal
 
 **macOS**:
+
 - Intel or Apple Silicon (M1/M2/M3) support
 - Homebrew recommended for package management
 
 **Linux**:
+
 - Docker Engine 20.10+ required
 - Docker Compose installed separately (or use `docker compose`)
 - Common on Ubuntu 20.04+, Debian 11+, CentOS 8+
@@ -44,6 +48,7 @@ docker compose --version
 ```
 
 Expected output:
+
 ```
 Docker version 24.0.0, build abc1234
 Docker Compose version v2.15.0
@@ -54,6 +59,7 @@ If Docker is not installed or version is old, download from [docker.com](https:/
 ### Step 3: Check Port Availability
 
 **Windows (PowerShell)**:
+
 ```powershell
 # Check if port 5173 is in use:
 netstat -ano | findstr :5173
@@ -66,6 +72,7 @@ netstat -ano | findstr :5432
 ```
 
 **macOS/Linux**:
+
 ```bash
 # Check all three ports:
 lsof -i :5173
@@ -83,6 +90,7 @@ docker compose up --build -d
 ```
 
 This command:
+
 - Builds Docker images for backend, frontend, and database
 - Starts containers in detached mode
 - May take 3–5 minutes on first run
@@ -95,6 +103,7 @@ docker compose ps
 ```
 
 Expected output:
+
 ```
 NAME            STATUS
 arep-postgres   Up (healthy)
@@ -130,13 +139,15 @@ Two demo users are pre-configured:
 The application uses environment variables defined in `docker-compose.yml`. To customize:
 
 1. Create a `.env` file in the project root:
+
 ```bash
 cp .env.example .env
 ```
 
-2. Edit `.env` with your settings.
+1. Edit `.env` with your settings.
 
-3. Restart services to apply changes:
+2. Restart services to apply changes:
+
 ```bash
 docker compose down
 docker compose up --build -d
@@ -149,6 +160,7 @@ If you need to configure backend-specific settings:
 1. Navigate to `backend/` directory
 2. Edit `app/core/settings.py` or pass environment variables
 3. Restart the backend container:
+
 ```bash
 docker compose restart arep-backend
 ```
@@ -159,6 +171,7 @@ To customize frontend API endpoint:
 
 1. Edit `frontend/vite.config.ts` and update `VITE_API_BASE_URL` if needed
 2. Or set environment variable before build:
+
 ```bash
 export VITE_API_BASE_URL=http://localhost:8000
 ```
@@ -172,6 +185,7 @@ curl http://localhost:8000/health
 ```
 
 Expected response:
+
 ```json
 {"status": "ok"}
 ```
@@ -183,6 +197,7 @@ curl http://localhost:8000/ready
 ```
 
 Expected response:
+
 ```json
 {"status": "ready"}
 ```
@@ -219,7 +234,7 @@ View logs, stop/restart services and reset database are covered in Troubleshooti
 
 El frontend ya está desplegado públicamente en AWS S3 en modo hosting estático y se puede acceder en:
 
-- https://arep-production-frontend.s3-website-us-east-1.amazonaws.com/
+- <https://arep-production-frontend.s3-website-us-east-1.amazonaws.com/>
 
 Este repositorio contiene plantillas y notas para desplegar el backend y la infraestructura en AWS (ver `infra/aws/`). La configuración actual es una demo reproducible; para producción se recomienda revisar las secciones de seguridad y escalabilidad en `docs/deployment/AWS_DEPLOYMENT_QUICK.md`.
 

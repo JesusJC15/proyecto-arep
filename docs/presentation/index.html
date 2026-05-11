@@ -171,7 +171,7 @@
       }
 
       .meta-row {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
         margin-top: 1.5rem;
       }
 
@@ -182,17 +182,17 @@
 
       .stat-grid,
       .feature-grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
       }
 
       .two-col {
-        grid-template-columns: 1.05fr 0.95fr;
+        grid-template-columns: 1fr 1fr;
         align-items: start;
       }
 
       .three-col,
       .qs-grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       }
 
       .pill,
@@ -1036,142 +1036,6 @@
                   “AREP convierte un flujo de triaje asistido por IA en una solución trazable, desplegada y defendible; eso es
                   exactamente lo que queríamos demostrar en la entrega final.”
                 </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section data-background-gradient="linear-gradient(135deg, #081120, #17314d)">
-          <div class="shell">
-            <div class="section-label">Guion general</div>
-            <h2>Cómo exponerla en equipo</h2>
-            <div class="speaking-order">
-              <div class="script-card">
-                <div class="speaker-number">1</div>
-                <strong>Persona 1</strong>
-                <p>Contexto, problema, propuesta, stack y visión general de la arquitectura.</p>
-                <p class="accent-2">Tiempo sugerido: 4–5 min.</p>
-              </div>
-              <div class="script-card">
-                <div class="speaker-number">2</div>
-                <strong>Persona 2</strong>
-                <p>Diagramas técnicos, backend, RAG, APIs, frontend y pruebas/resultados.</p>
-                <p class="accent-2">Tiempo sugerido: 5–6 min.</p>
-              </div>
-              <div class="script-card">
-                <div class="speaker-number">3</div>
-                <strong>Persona 3</strong>
-                <p>Despliegue AWS, seguridad, métricas, límites, futuro y conclusión.</p>
-                <p class="accent-2">Tiempo sugerido: 4–5 min.</p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section data-background-gradient="linear-gradient(135deg, #081120, #17314d)">
-          <div class="shell">
-            <div class="section-label">Guion · Persona 1</div>
-            <h2>Qué debe decir el primer expositor</h2>
-            <div class="two-col">
-              <div class="script-card">
-                <strong>Diapositivas</strong>
-                <p>1 a 6: título, narrativa, problema, solución, stack y visión general.</p>
-                <strong>Mensaje central</strong>
-                <p>
-                  Explicar por qué el problema importa, cómo AREP lo aborda y cuáles fueron las decisiones técnicas que dieron
-                  forma al proyecto.
-                </p>
-                <strong>Transición</strong>
-                <p>
-                  “Con el problema y la propuesta claros, ahora vemos cómo se materializa técnicamente en la arquitectura y en el flujo clínico.”
-                </p>
-              </div>
-              <div class="script-card">
-                <strong>Puntos clave</strong>
-                <ul>
-                  <li>Triaje médico asistido por IA con trazabilidad.</li>
-                  <li>Separación entre paciente y profesional.</li>
-                  <li>FastAPI, React, PostgreSQL, Docker y AWS como base técnica.</li>
-                  <li>Decisiones de diseño orientadas a claridad, modularidad y evolución.</li>
-                </ul>
-                <strong>Preguntas probables</strong>
-                <ul>
-                  <li>¿Por qué usar RAG?</li>
-                  <li>¿Por qué no usar un frontend monolítico más simple?</li>
-                  <li>¿Qué hace que esta solución sea académica y no solo una demo?</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section data-background-gradient="linear-gradient(135deg, #081120, #17314d)">
-          <div class="shell">
-            <div class="section-label">Guion · Persona 2</div>
-            <h2>Qué debe decir el segundo expositor</h2>
-            <div class="two-col">
-              <div class="script-card">
-                <strong>Diapositivas</strong>
-                <p>7 a 14: diagramas de contexto, contenedores, backend, datos, secuencias, UX, APIs y pruebas.</p>
-                <strong>Mensaje central</strong>
-                <p>
-                  Demostrar que la arquitectura no está dibujada “a mano alzada”: se ve reflejada en el repositorio, en los
-                  diagramas y en los endpoints reales.
-                </p>
-                <strong>Transición</strong>
-                <p>
-                  “Ya vimos cómo funciona y cómo está construido; ahora pasemos a la parte de despliegue, seguridad y cierre.”
-                </p>
-              </div>
-              <div class="script-card">
-                <strong>Puntos clave</strong>
-                <ul>
-                  <li>Explicar el flujo completo: intake → triage → evidencia → escalamiento.</li>
-                  <li>Mostrar qué significa la trazabilidad en términos de negocio y de datos.</li>
-                  <li>Contar las métricas del RAG con honestidad técnica.</li>
-                  <li>Apoyarse en los diagramas PNG para que el jurado vea la arquitectura real.</li>
-                </ul>
-                <strong>Preguntas probables</strong>
-                <ul>
-                  <li>¿Qué endpoint genera la recomendación?</li>
-                  <li>¿Cómo se conservan las fuentes?</li>
-                  <li>¿Qué mide el top-1 / top-k hit?</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section data-background-gradient="linear-gradient(135deg, #081120, #17314d)">
-          <div class="shell">
-            <div class="section-label">Guion · Persona 3</div>
-            <h2>Qué debe decir el tercer expositor</h2>
-            <div class="two-col">
-              <div class="script-card">
-                <strong>Diapositivas</strong>
-                <p>15 a 19: AWS, calidad, seguridad, límites, futuro y conclusión.</p>
-                <strong>Mensaje central</strong>
-                <p>
-                  Cerrar mostrando que AREP ya tiene una vía de despliegue, una URL pública, una postura clara sobre sus
-                  límites y un roadmap técnico serio.
-                </p>
-                <strong>Transición final</strong>
-                <p>“Con esto cerramos la propuesta y dejamos abiertas las preguntas.”</p>
-              </div>
-              <div class="script-card">
-                <strong>Puntos clave</strong>
-                <ul>
-                  <li>La demo pública ya está en AWS S3.</li>
-                  <li>La infraestructura del backend está modelada en AWS.</li>
-                  <li>Seguridad, observabilidad y límites fueron explicitados.</li>
-                  <li>El proyecto está listo para entregar y defender.</li>
-                </ul>
-                <strong>Preguntas probables</strong>
-                <ul>
-                  <li>¿Qué falta para producción?</li>
-                  <li>¿Cómo escalaría en AWS?</li>
-                  <li>¿Qué harían distinto con más tiempo?</li>
-                </ul>
               </div>
             </div>
           </div>

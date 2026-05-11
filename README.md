@@ -23,11 +23,11 @@ AREP es una plataforma académica de triaje médico asistido por IA, diseñada p
 
 La interfaz frontend está desplegada en AWS (hosting estático S3 public) y accesible públicamente en:
 
-- https://arep-production-frontend.s3-website-us-east-1.amazonaws.com/
+- <https://arep-production-frontend.s3-website-us-east-1.amazonaws.com/>
 
 Nota: el backend en este repositorio está preparado para despliegue (ver `infra/aws`) y puede ejecutarse localmente con Docker Compose.
 
-## Arranque rápido (local)
+## Arranque (local)
 
 1. Clonar repositorio:
 
@@ -44,10 +44,10 @@ docker compose up --build -d
 
 3. Rutas útiles:
 
-- Frontend: http://localhost:4173
-- Backend Health: http://localhost:8000/health
-- Metrics: http://localhost:8000/metrics
-- RAG status: http://localhost:8000/rag/status
+- Frontend: <http://localhost:4173>
+- Backend Health: <http://localhost:8000/health>
+- Metrics: <http://localhost:8000/metrics>
+- RAG status: <http://localhost:8000/rag/status>
 
 4. Usuarios demo (preconfigurados):
 
