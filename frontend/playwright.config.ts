@@ -1,6 +1,7 @@
 import { defineConfig } from "@playwright/test";
 
 const reuseExistingServer = !process.env.CI;
+const pythonCmd = process.platform === "win32" ? "py" : "python";
 
 export default defineConfig({
   testDir: "./e2e",
