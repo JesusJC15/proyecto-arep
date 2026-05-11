@@ -4,7 +4,8 @@ test("flujo principal paciente y profesional", async ({ page }) => {
   await page.goto("/");
 
   await page.getByRole("button", { name: "Demo paciente" }).click();
-  await expect(page.getByText("Ana Torres · patient")).toBeVisible();
+  await expect(page.locator(".session-card strong")).toContainText("Ana Torres");
+  await expect(page.getByRole("heading", { name: "Captura estructurada de sintomas" })).toBeVisible();
 
   await page.getByRole("button", { name: "Enviar consulta y ejecutar triage" }).click();
   await expect(page.getByText("La consulta fue enviada y escalada automaticamente al espacio profesional.")).toBeVisible();
@@ -13,7 +14,7 @@ test("flujo principal paciente y profesional", async ({ page }) => {
   await expect(page.locator(".evidence-card").first()).toContainText("Score");
 
   await page.getByRole("button", { name: "Demo profesional" }).click();
-  await expect(page.getByText("Dra. Suarez · professional")).toBeVisible();
+  await expect(page.locator(".session-card strong")).toContainText("Dra. Suarez");
   await expect(page.getByRole("heading", { name: "Casos escalados" })).toBeVisible();
 
   await page.getByRole("button", { name: "Tomar caso" }).click();

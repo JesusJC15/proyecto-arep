@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 
-import { createConsultation, runTriage } from "../api";
+import { buildSourceUrl, createConsultation, runTriage } from "../api";
 import type { ConsultationRecord, Severity, UserSummary } from "../types";
 
 interface PatientWorkspaceProps {
@@ -238,7 +238,7 @@ export function PatientWorkspace({ token, user }: PatientWorkspaceProps) {
                       {source.matched_terms.length > 0 && (
                         <p className="muted">Terminos coincidentes: {source.matched_terms.join(", ")}</p>
                       )}
-                      <a href={source.uri} target="_blank" rel="noreferrer">
+                      <a href={buildSourceUrl(source.uri)} target="_blank" rel="noreferrer">
                         Ver fuente
                       </a>
                     </article>
