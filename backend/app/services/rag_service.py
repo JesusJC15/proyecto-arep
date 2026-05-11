@@ -209,6 +209,15 @@ class RAGService:
     def get_status(self) -> RAGStatus:
         return self.initialize(force_reindex=False)
 
+    def read_source_content(self, source_uri: str) -> str:
+        normalized = source_uri.strip().replace("\\", "/")
+        if normalized.startswith("knowledge-base/"):
+            normalized = normalized.removeprefix("knowledge-base/")
+        candidate = (self.knowledge_base_root / normalized).resolve()
+        if self.knowledge_base_root not in candidate.parents or not candidate.is_file():
+            raise FileNotFoundError(f"Source not found: {source_uri}")
+        return candidate.read_text(encoding="utf-8")
+
     def _build_provider(self) -> EmbeddingProvider:
         if self.settings.rag_embedding_provider == "external_openai_compatible":
             assert self.settings.rag_embedding_api_url is not None

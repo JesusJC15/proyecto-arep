@@ -1,6 +1,8 @@
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Depends, Query, Request
 from fastapi.responses import PlainTextResponse
 
+from app.dependencies import get_rag_service
+from app.services.rag_service import RAGService
 from app.schemas.domain import RAGStatus
 
 router = APIRouter()
@@ -26,3 +28,12 @@ def metrics(request: Request) -> str:
 @router.get("/rag/status", tags=["meta"], response_model=RAGStatus)
 def rag_status(request: Request) -> RAGStatus:
     return request.app.state.rag_service.get_status()
+
+
+@router.get("/rag/source", tags=["meta"], response_class=PlainTextResponse)
+def rag_source(
+    uri: str = Query(..., min_length=1),
+    rag_service: RAGService = Depends(get_rag_service),
+) -> PlainTextResponse:
+    content = rag_service.read_source_content(uri)
+    return PlainTextResponse(content=content, media_type="text/markdown")

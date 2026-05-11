@@ -109,7 +109,7 @@ class RecommendationModel(Base):
 class EvidenceSourceModel(Base):
     __tablename__ = "evidence_sources"
 
-    id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    id: Mapped[str] = mapped_column(String(128), primary_key=True)
     recommendation_consultation_id: Mapped[str] = mapped_column(ForeignKey("recommendations.consultation_id"), nullable=False)
     document_id: Mapped[str] = mapped_column(String(128), nullable=False)
     chunk_id: Mapped[str] = mapped_column(String(128), nullable=False)
@@ -386,10 +386,15 @@ class SQLRepository:
         user_columns = {column["name"] for column in inspector.get_columns("users")}
         recommendation_columns = {column["name"] for column in inspector.get_columns("recommendations")}
         evidence_columns = {column["name"] for column in inspector.get_columns("evidence_sources")}
+        evidence_id_length = next(
+            (column["type"].length for column in inspector.get_columns("evidence_sources") if column["name"] == "id"),
+            None,
+        )
         return (
             "password_hash" not in user_columns
             or "retrieval_version" not in recommendation_columns
             or "document_id" not in evidence_columns
+            or (evidence_id_length is not None and evidence_id_length < 128)
         )
 
     def get_user(self, user_id: str) -> UserRecord | None:
@@ -599,6 +604,7 @@ class SQLRepository:
                     for item in documents
                 ]
             )
+            session.flush()
             session.add_all(
                 [
                     CorpusChunkModel(
