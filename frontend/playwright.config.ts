@@ -12,7 +12,7 @@ export default defineConfig({
   },
   webServer: [
     {
-      command: "py -m uvicorn app.main:app --host 127.0.0.1 --port 8000",
+      command: `${pythonCmd} -m uvicorn app.main:app --host 127.0.0.1 --port 8000`,
       cwd: "../backend",
       env: {
         AREP_ENV: "test",
