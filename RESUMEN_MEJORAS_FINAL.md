@@ -156,10 +156,10 @@ Documento: `AUDITORIA_COMPLETITUD_FINAL.md` (4,000+ palabras)
 ### Nuevos Documentos (16 total):
 
 **Guías Operativas** (4):
-- ✅ [docs/SETUP_GUIDE.md](docs/SETUP_GUIDE.md) - 1,200 palabras
-- ✅ [docs/QUICKSTART.md](docs/QUICKSTART.md) - 300 palabras
-- ✅ [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) - 2,000 palabras
-- ✅ [docs/API_REFERENCE.md](docs/API_REFERENCE.md) - 1,500 palabras
+- ✅ [docs/guides/SETUP_GUIDE.md](docs/guides/SETUP_GUIDE.md) - 1,200 palabras
+- ✅ [docs/guides/QUICKSTART.md](docs/guides/QUICKSTART.md) - 300 palabras
+- ✅ [docs/guides/TROUBLESHOOTING.md](docs/guides/TROUBLESHOOTING.md) - 2,000 palabras
+- ✅ [docs/technical/API_REFERENCE.md](docs/technical/API_REFERENCE.md) - 1,500 palabras
 
 **Documentos Clínicos** (10):
 - ✅ [knowledge-base/clinical-guidelines/respiratory-infections.md](knowledge-base/clinical-guidelines/respiratory-infections.md)

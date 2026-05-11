@@ -70,7 +70,7 @@ python -m pytest -q
 
 ## Operacion
 
-- Runbook: [../docs/runbook-final.md](../docs/runbook-final.md)
+- Runbook: [../docs/guides/runbook-final.md](../docs/guides/runbook-final.md)
 - Compose oficial: [../docker-compose.yml](../docker-compose.yml)
 - Dockerfile: [Dockerfile](Dockerfile)
 

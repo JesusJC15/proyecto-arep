@@ -3,126 +3,1248 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AREP - Sustentacion final</title>
+    <title>AREP | Entrega final académica y profesional</title>
+    <meta
+      name="description"
+      content="Presentación final del proyecto AREP: triaje médico asistido por IA, RAG trazable, despliegue AWS, pruebas, métricas y guion para exposición en equipo."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/theme/white.css" />
     <style>
       :root {
-        --accent: #0f4c81;
-        --soft: #e8f3ff;
-        --ink: #1b263b;
+        --bg-0: #07111f;
+        --bg-1: #0b1b2f;
+        --bg-2: #122947;
+        --card: rgba(255, 255, 255, 0.09);
+        --ink: #f4f7fb;
+        --muted: rgba(244, 247, 251, 0.72);
+        --line: rgba(255, 255, 255, 0.13);
+        --accent: #5cc8ff;
+        --accent-2: #61e29f;
+        --accent-3: #ffb86b;
+        --shadow: 0 22px 54px rgba(0, 0, 0, 0.28);
+        --radius: 24px;
       }
+
+      html,
+      body {
+        background:
+          radial-gradient(circle at top left, rgba(92, 200, 255, 0.18), transparent 28%),
+          radial-gradient(circle at top right, rgba(97, 226, 159, 0.12), transparent 26%),
+          linear-gradient(135deg, var(--bg-0), var(--bg-1) 52%, var(--bg-2));
+      }
+
+      body::before,
+      body::after {
+        content: "";
+        position: fixed;
+        inset: auto;
+        border-radius: 999px;
+        pointer-events: none;
+        filter: blur(20px);
+        opacity: 0.35;
+        z-index: 0;
+      }
+
+      body::before {
+        width: 20rem;
+        height: 20rem;
+        left: -6rem;
+        bottom: -5rem;
+        background: rgba(92, 200, 255, 0.2);
+      }
+
+      body::after {
+        width: 16rem;
+        height: 16rem;
+        right: -5rem;
+        top: -4rem;
+        background: rgba(97, 226, 159, 0.18);
+      }
+
       .reveal {
+        font-family: "Manrope", sans-serif;
         color: var(--ink);
+        z-index: 1;
       }
-      .reveal h1, .reveal h2, .reveal h3 {
-        color: var(--accent);
+
+      .reveal h1,
+      .reveal h2,
+      .reveal h3,
+      .reveal h4 {
+        color: #ffffff;
+        letter-spacing: -0.03em;
+        text-transform: none;
       }
-      .card {
-        background: var(--soft);
-        border-left: 6px solid var(--accent);
-        padding: 1rem 1.2rem;
-        border-radius: 0.4rem;
+
+      .reveal h1 {
+        font-size: 2.35em;
+        line-height: 0.96;
+        margin-bottom: 0.5rem;
       }
-      .small {
-        font-size: 0.8em;
+
+      .reveal h2 {
+        font-size: 1.6em;
+        margin-bottom: 0.8rem;
+      }
+
+      .reveal p,
+      .reveal li {
+        color: var(--muted);
+        font-size: 0.92em;
+        line-height: 1.5;
+      }
+
+      .reveal strong {
+        color: #fff;
+      }
+
+      .hero {
+        min-height: 82vh;
+        display: grid;
+        align-items: center;
+      }
+
+      .shell {
+        background: rgba(255, 255, 255, 0.045);
+        border: 1px solid rgba(255, 255, 255, 0.11);
+        border-radius: var(--radius);
+        padding: 1.15rem;
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(18px);
+      }
+
+      .hero-shell {
+        padding: 2rem;
+        background:
+          linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.06)),
+          radial-gradient(circle at top right, rgba(92, 200, 255, 0.18), transparent 24%),
+          radial-gradient(circle at bottom left, rgba(97, 226, 159, 0.12), transparent 22%);
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.4rem 0.7rem;
+        border-radius: 999px;
+        background: rgba(92, 200, 255, 0.14);
+        color: #dff4ff;
+        font-size: 0.72em;
+        font-weight: 700;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        margin-bottom: 1rem;
+      }
+
+      .eyebrow::before {
+        content: "";
+        width: 0.45rem;
+        height: 0.45rem;
+        border-radius: 50%;
+        background: var(--accent);
+        box-shadow: 0 0 18px rgba(92, 200, 255, 0.9);
+      }
+
+      .subtitle {
+        font-size: 1.02rem;
+        color: rgba(244, 247, 251, 0.82);
+        max-width: 52rem;
+      }
+
+      .meta-row,
+      .tag-row,
+      .stat-grid,
+      .feature-grid,
+      .two-col,
+      .three-col,
+      .qs-grid,
+      .diagram-meta {
+        display: grid;
+        gap: 1rem;
+      }
+
+      .meta-row {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        margin-top: 1.5rem;
+      }
+
+      .tag-row {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        margin-top: 1.2rem;
+      }
+
+      .stat-grid,
+      .feature-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .two-col {
+        grid-template-columns: 1.05fr 0.95fr;
+        align-items: start;
+      }
+
+      .three-col,
+      .qs-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .pill,
+      .badge,
+      .chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        padding: 0.5rem 0.75rem;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: #fff;
+        font-size: 0.82rem;
+        font-weight: 600;
+        letter-spacing: 0.01em;
+      }
+
+      .chip {
+        background: rgba(92, 200, 255, 0.12);
+        border-color: rgba(92, 200, 255, 0.22);
+        color: #e4f6ff;
+      }
+
+      .card,
+      .feature-card,
+      .metric-card,
+      .note-card,
+      .script-card,
+      .question-card,
+      .callout-card {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: calc(var(--radius) - 4px);
+        padding: 1rem 1.05rem;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+      }
+
+      .feature-card,
+      .metric-card,
+      .script-card,
+      .question-card {
+        min-height: 100%;
+      }
+
+      .metric-card .value {
+        font-size: 1.65rem;
+        line-height: 1;
+        margin-bottom: 0.25rem;
+        color: #fff;
+        font-weight: 800;
+      }
+
+      .section-label {
+        font-size: 0.74rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: rgba(244, 247, 251, 0.7);
+        margin-bottom: 0.55rem;
+      }
+
+      .figure-frame {
+        background: rgba(255, 255, 255, 0.96);
+        border-radius: 22px;
+        padding: 0.9rem;
+        border: 1px solid rgba(255, 255, 255, 0.85);
+        box-shadow: 0 16px 44px rgba(0, 0, 0, 0.22);
+      }
+
+      .figure-frame img {
+        width: 100%;
+        max-height: 62vh;
+        object-fit: contain;
+        display: block;
+        border-radius: 16px;
+      }
+
+      .figure-frame figcaption {
+        margin-top: 0.75rem;
+        color: #334155;
+        font-size: 0.82rem;
+        text-align: center;
+      }
+
+      .timeline {
+        display: grid;
+        gap: 0.7rem;
+      }
+
+      .timeline-item {
+        display: grid;
+        grid-template-columns: 120px 1fr;
+        gap: 0.85rem;
+        align-items: start;
+        padding: 0.85rem 0.95rem;
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .timeline-item strong {
+        color: #fff;
+      }
+
+      .timeline-item span {
+        color: var(--muted);
+      }
+
+      .url-box {
+        display: inline-flex;
+        flex-wrap: wrap;
+        gap: 0.6rem;
+        align-items: center;
+        padding: 0.8rem 1rem;
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+      }
+
+      .url-box a,
+      .reveal a {
+        color: #dff4ff;
+        text-decoration: none;
+      }
+
+      .url-box a:hover,
+      .reveal a:hover {
+        color: #ffffff;
+        text-decoration: underline;
+      }
+
+      .speaking-order {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0.9rem;
+      }
+
+      .speaker-number {
+        width: 2rem;
+        height: 2rem;
+        border-radius: 999px;
+        display: inline-grid;
+        place-items: center;
+        background: rgba(92, 200, 255, 0.15);
+        color: #fff;
+        font-weight: 800;
+        margin-bottom: 0.75rem;
+      }
+
+      .mini-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 0.8rem;
+      }
+
+      .reveal .slides section {
+        text-align: left;
+      }
+
+      .reveal section.center,
+      .reveal .center {
+        text-align: center;
+      }
+
+      .reveal ul,
+      .reveal ol {
+        margin-left: 1.1em;
+      }
+
+      .reveal li {
+        margin-bottom: 0.35rem;
+      }
+
+      .reveal blockquote {
+        width: 100%;
+        margin: 0;
+        border-left: 4px solid var(--accent-2);
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 18px;
+        padding: 1rem 1.1rem;
+        color: #fff;
+      }
+
+      .slide-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+        margin-top: 1rem;
+        color: rgba(244, 247, 251, 0.65);
+        font-size: 0.78rem;
+      }
+
+      .mono {
+        font-family: "IBM Plex Mono", monospace;
+      }
+
+      @media (max-width: 1200px) {
+        .meta-row,
+        .stat-grid,
+        .feature-grid,
+        .speaking-order,
+        .three-col,
+        .qs-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+
+        .two-col {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 800px) {
+        .meta-row,
+        .stat-grid,
+        .feature-grid,
+        .speaking-order,
+        .three-col,
+        .qs-grid,
+        .mini-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .timeline-item {
+          grid-template-columns: 1fr;
+        }
+
+        .hero-shell {
+          padding: 1.1rem;
+        }
       }
     </style>
   </head>
   <body>
     <div class="reveal">
       <div class="slides">
-        <section>
-          <h1>AREP</h1>
-          <h3>Plataforma academica de triaje con RAG trazable</h3>
-          <p class="small">Entrega final integral: demo reproducible, blueprint AWS y paquete academico</p>
-        </section>
-        <section>
-          <h2>Problema</h2>
-          <div class="card">
-            <p>La orientacion inicial en salud necesita triage claro, evidencia recuperable y supervision humana en casos de mayor riesgo.</p>
+        <section class="hero" data-transition="fade" data-background-gradient="linear-gradient(135deg, #07111f, #122947)">
+          <div class="shell hero-shell">
+            <div class="eyebrow">Entrega final académica y profesional</div>
+            <h1>AREP</h1>
+            <p class="subtitle">
+              Plataforma de triaje médico asistido por IA con autenticación por roles, RAG trazable,
+              observabilidad, pruebas automatizadas y despliegue público en AWS.
+            </p>
+
+            <div class="meta-row">
+              <div class="card">
+                <strong>Problema</strong>
+                <p>Orientación médica inicial con evidencia clara, escalamiento y supervisión humana.</p>
+              </div>
+              <div class="card">
+                <strong>Solución</strong>
+                <p>Frontend + backend + corpus curado + RAG + trazabilidad + despliegue estático en AWS.</p>
+              </div>
+              <div class="card">
+                <strong>Resultado</strong>
+                <p>Un sistema demostrable, consistente y listo para sustentación académica/profesional.</p>
+              </div>
+            </div>
+
+            <div class="tag-row">
+              <span class="pill">React + Vite</span>
+              <span class="pill">FastAPI</span>
+              <span class="pill">PostgreSQL</span>
+              <span class="pill">JWT + roles</span>
+              <span class="pill">Docker Compose</span>
+              <span class="pill">AWS S3</span>
+              <span class="pill">ECS / RDS / ECR</span>
+            </div>
+
+            <div class="slide-footer">
+              <span>Exposición final</span>
+              <span class="mono">http://arep-production-frontend.s3-website-us-east-1.amazonaws.com/</span>
+            </div>
           </div>
         </section>
-        <section>
-          <h2>Propuesta</h2>
-          <ul>
-            <li>Portal paciente y espacio profesional</li>
-            <li>Triage por reglas con escalamiento</li>
-            <li>RAG semantico local, trazable y evaluable</li>
-            <li>Demo reproducible con Docker Compose</li>
-          </ul>
+
+        <section data-background-gradient="linear-gradient(135deg, #081120, #11233d)">
+          <div class="shell">
+            <div class="section-label">Narrativa</div>
+            <h2>Historia que cuenta la presentación</h2>
+            <div class="three-col">
+              <div class="feature-card">
+                <strong>1. El problema</strong>
+                <p>La atención inicial necesita rapidez, evidencia y escalamiento claro sin perder trazabilidad.</p>
+              </div>
+              <div class="feature-card">
+                <strong>2. La propuesta</strong>
+                <p>AREP une intake, triage, RAG y panel profesional con un flujo coherente y defendible.</p>
+              </div>
+              <div class="feature-card">
+                <strong>3. La evidencia</strong>
+                <p>El repositorio muestra arquitectura, APIs, pruebas, métricas, despliegue y guion de demo.</p>
+              </div>
+            </div>
+            <div class="mini-grid" style="margin-top: 1rem">
+              <span class="chip">Contexto</span>
+              <span class="chip">Arquitectura</span>
+              <span class="chip">Implementación</span>
+              <span class="chip">Despliegue</span>
+              <span class="chip">Validación</span>
+              <span class="chip">Guion de exposición</span>
+            </div>
+          </div>
         </section>
-        <section>
-          <h2>Arquitectura</h2>
-          <ul>
-            <li>Frontend React</li>
-            <li>Backend FastAPI con JWT, auditoria y metricas</li>
-            <li>Postgres como base oficial de demo</li>
-            <li>Corpus curado + indice RAG reproducible</li>
-          </ul>
+
+        <section data-background-gradient="linear-gradient(135deg, #081120, #17314d)">
+          <div class="shell two-col">
+            <div>
+              <div class="section-label">Problema</div>
+              <h2>¿Qué resuelve AREP?</h2>
+              <p>
+                En orientación médica inicial, el valor no es solo clasificar síntomas: también importa explicar la decisión,
+                recuperar evidencia relevante y decidir cuándo escalar a un profesional.
+              </p>
+              <ul>
+                <li>Se reduce la opacidad de las recomendaciones clínicas.</li>
+                <li>Se separan claramente paciente y profesional.</li>
+                <li>La solución documenta fuentes, ranking y justificación.</li>
+                <li>El sistema queda listo para evolucionar a una arquitectura cloud real.</li>
+              </ul>
+            </div>
+            <div class="callout-card">
+              <strong>Necesidad central</strong>
+              <p>
+                Una plataforma que no solo responda, sino que permita explicar por qué responde así, con supervisión humana
+                cuando el riesgo o la incertidumbre crecen.
+              </p>
+              <blockquote>
+                “La recomendación debe ser útil, trazable y verificable; no una caja negra.”
+              </blockquote>
+            </div>
+          </div>
         </section>
-        <section>
-          <h2>Flujo de demo</h2>
-          <ol>
-            <li>Paciente inicia sesion</li>
-            <li>Crea consulta y ejecuta triage</li>
-            <li>Recibe recomendacion con evidencia, score y rank</li>
-            <li>Profesional toma el caso y lo revisa</li>
-          </ol>
+
+        <section data-background-gradient="linear-gradient(135deg, #081120, #17314d)">
+          <div class="shell two-col">
+            <div>
+              <div class="section-label">Solución</div>
+              <h2>La propuesta técnica</h2>
+              <div class="feature-grid">
+                <div class="feature-card">
+                  <strong>Canal paciente</strong>
+                  <p>Captura estructurada de síntomas, contexto y consulta clínica inicial.</p>
+                </div>
+                <div class="feature-card">
+                  <strong>Backend modular</strong>
+                  <p>FastAPI con autenticación JWT, auditoría, métricas, RAG y bandeja profesional.</p>
+                </div>
+                <div class="feature-card">
+                  <strong>Evidencia recuperable</strong>
+                  <p>Corpus curado, trazabilidad por fuente, scores y ranking visibles en la respuesta.</p>
+                </div>
+                <div class="feature-card">
+                  <strong>Despliegue reproducible</strong>
+                  <p>Local con Docker Compose y público en AWS para la demo final.</p>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <strong>Propuesta en una frase</strong>
+              <p>
+                AREP convierte una descripción libre de síntomas en una recomendación clínica trazable y en un caso listo para
+                revisión humana cuando hace falta.
+              </p>
+              <div class="tag-row" style="margin-top: 0.9rem">
+                <span class="pill">Triage</span>
+                <span class="pill">RAG</span>
+                <span class="pill">Roles</span>
+                <span class="pill">Auditoría</span>
+              </div>
+            </div>
+          </div>
         </section>
-        <section>
-          <h2>RAG y trazabilidad</h2>
-          <ul>
-            <li>Corpus versionado con manifiesto curatorial</li>
-            <li>Chunking reproducible</li>
-            <li>Embeddings locales por defecto</li>
-            <li>Score, rank, metodo y razon de recuperacion por fuente</li>
-          </ul>
+
+        <section data-background-gradient="linear-gradient(135deg, #081120, #1b3652)">
+          <div class="shell">
+            <div class="section-label">Tecnologías</div>
+            <h2>Stack y decisiones de diseño</h2>
+            <div class="stat-grid">
+              <div class="metric-card">
+                <div class="value">Frontend</div>
+                <strong>React + Vite + TypeScript</strong>
+                <p>SPA estática, rápida de iterar, fácil de desplegar y clara para dos perfiles de usuario.</p>
+              </div>
+              <div class="metric-card">
+                <div class="value">Backend</div>
+                <strong>FastAPI + Python</strong>
+                <p>Contratos REST, validación, JWT, métricas, auditoría y rutas para RAG y profesional.</p>
+              </div>
+              <div class="metric-card">
+                <div class="value">Datos</div>
+                <strong>PostgreSQL</strong>
+                <p>Persistencia operativa de la demo y base para evolucionar a un despliegue más robusto.</p>
+              </div>
+              <div class="metric-card">
+                <div class="value">Infra</div>
+                <strong>Docker Compose + AWS</strong>
+                <p>Reproducción local y proyección cloud en S3, ECR, ECS y RDS.</p>
+              </div>
+            </div>
+            <div class="mini-grid" style="margin-top: 1rem">
+              <span class="chip">JWT por roles</span>
+              <span class="chip">Auditoría</span>
+              <span class="chip">Rate limiting</span>
+              <span class="chip">Observabilidad</span>
+              <span class="chip">RAG reproducible</span>
+              <span class="chip">Blueprint AWS</span>
+            </div>
+          </div>
         </section>
-        <section>
-          <h2>Resultados</h2>
-          <ul>
-            <li>Backend tests y E2E automatizado</li>
-            <li>Top-1 hit: 2/3</li>
-            <li>Top-k hit: 3/3</li>
-            <li>Observabilidad operativa: health, ready, metrics, rag/status</li>
-          </ul>
+
+        <section data-background-gradient="linear-gradient(135deg, #081120, #17314d)">
+          <div class="shell">
+            <div class="section-label">Arquitectura</div>
+            <h2>Vista general del sistema</h2>
+            <div class="two-col">
+              <div>
+                <p>
+                  El diseño separa claramente la experiencia del paciente, la atención profesional, la lógica clínica y la capa de
+                  evidencia para mantener una trazabilidad consistente.
+                </p>
+                <div class="feature-grid">
+                  <div class="feature-card">
+                    <strong>Presentación</strong>
+                    <p>Interfaz para dos roles, con experiencia diferenciada.</p>
+                  </div>
+                  <div class="feature-card">
+                    <strong>Servicios</strong>
+                    <p>API, triage, autenticación, RAG, auditoría y métricas.</p>
+                  </div>
+                  <div class="feature-card">
+                    <strong>Datos</strong>
+                    <p>Postgres, corpus curado, índice RAG y evidencias.</p>
+                  </div>
+                  <div class="feature-card">
+                    <strong>Despliegue</strong>
+                    <p>Compose local y AWS como proyección/entrega pública.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="callout-card">
+                <strong>Decisiones de diseño que importan</strong>
+                <ul>
+                  <li>FastAPI para iterar rápido sin sacrificar contratos claros.</li>
+                  <li>React para separar experiencias y mostrar evidencia con facilidad.</li>
+                  <li>RAG grounded: la respuesta no depende de generación libre.</li>
+                  <li>AWS como camino natural a producción, no como promesa vacía.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
         </section>
-        <section>
-          <h2>Entrega final</h2>
-          <ul>
-            <li>Dockerfiles + docker-compose oficial</li>
-            <li>Runbook y guion de demo</li>
-            <li>README maestro fuerte</li>
-            <li>Blueprint AWS base para red, app y datos</li>
-          </ul>
+
+        <section data-background-gradient="linear-gradient(135deg, #081120, #17314d)">
+          <div class="shell">
+            <div class="section-label">Diagrama 1</div>
+            <h2>Contexto del sistema</h2>
+            <div class="two-col">
+              <figure class="figure-frame">
+                <img src="../../diagrams/01-c4-context.png" alt="Diagrama de contexto de AREP" />
+                <figcaption>La plataforma conecta paciente, profesional, base documental, proveedor LLM y una futura capa FHIR.</figcaption>
+              </figure>
+              <div class="diagram-meta">
+                <div class="card">
+                  <strong>Qué muestra</strong>
+                  <p>El alcance externo del sistema y los actores que interactúan con AREP.</p>
+                </div>
+                <div class="card">
+                  <strong>Por qué importa</strong>
+                  <p>Permite explicar el problema de negocio sin entrar todavía al detalle de implementación.</p>
+                </div>
+                <div class="card">
+                  <strong>Mensaje para exponer</strong>
+                  <p>AREP no es solo una UI: es una plataforma con actores, conocimiento clínico y proyección de interoperabilidad.</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </section>
-        <section>
-          <h2>Limites</h2>
-          <ul>
-            <li>No es un sistema clinico productivo</li>
-            <li>No hay despliegue real en AWS en esta fase</li>
-            <li>No hay validacion clinica formal</li>
-            <li>FHIR sigue siendo proyeccion</li>
-          </ul>
+
+        <section data-background-gradient="linear-gradient(135deg, #081120, #17314d)">
+          <div class="shell">
+            <div class="section-label">Diagrama 2</div>
+            <h2>Arquitectura de contenedores</h2>
+            <div class="two-col">
+              <figure class="figure-frame">
+                <img src="../../diagrams/02-c4-container.png" alt="Diagrama de contenedores de AREP" />
+                <figcaption>Frontend paciente y profesional, backend modular, SQL operativo y proyección hacia PostgreSQL/Vector Store.</figcaption>
+              </figure>
+              <div class="diagram-meta">
+                <div class="card">
+                  <strong>Contenedores</strong>
+                  <p>Divide la solución en UI, API, triage, RAG y persistencia.</p>
+                </div>
+                <div class="card">
+                  <strong>Lectura técnica</strong>
+                  <p>Muestra cómo el sistema puede crecer sin mezclar responsabilidades.</p>
+                </div>
+                <div class="card">
+                  <strong>Decisión clave</strong>
+                  <p>La arquitectura mantiene el MVP local pero deja listo el salto a infraestructura gestionada.</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </section>
-        <section>
-          <h2>Roadmap</h2>
-          <ul>
-            <li>Vector store productivo o pgvector</li>
-            <li>Secret management y hardening</li>
-            <li>Despliegue cloud real</li>
-            <li>Validacion con expertos y usuarios</li>
-          </ul>
+
+        <section data-background-gradient="linear-gradient(135deg, #081120, #17314d)">
+          <div class="shell">
+            <div class="section-label">Diagrama 3</div>
+            <h2>Backend modular</h2>
+            <div class="two-col">
+              <figure class="figure-frame">
+                <img src="../../diagrams/03-backend-components.png" alt="Diagrama de componentes del backend" />
+                <figcaption>Separación interna entre autenticación, consultas, triage, RAG, casos profesionales y trazabilidad.</figcaption>
+              </figure>
+              <div class="diagram-meta">
+                <div class="card">
+                  <strong>Servicios internos</strong>
+                  <p>Auth, consultas, triage, RAG, profesionales, seguridad y métricas.</p>
+                </div>
+                <div class="card">
+                  <strong>Ventaja técnica</strong>
+                  <p>Facilita pruebas, cambios localizados y evolución futura a microservicios si hiciera falta.</p>
+                </div>
+                <div class="card">
+                  <strong>Cómo contarlo</strong>
+                  <p>Primero entra la solicitud, luego el backend normaliza, clasifica, recupera evidencia y deja rastro.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section data-background-gradient="linear-gradient(135deg, #081120, #1b3652)">
+          <div class="shell">
+            <div class="section-label">Diagrama 4</div>
+            <h2>Modelo de datos y trazabilidad</h2>
+            <div class="two-col">
+              <figure class="figure-frame">
+                <img src="../../diagrams/07-data-model.png" alt="Diagrama de modelo de datos" />
+                <figcaption>Entidades clave para usuarios, consultas, resultados de triage, fuentes de evidencia y casos escalados.</figcaption>
+              </figure>
+              <div class="diagram-meta">
+                <div class="card">
+                  <strong>Objetivo</strong>
+                  <p>Conectar la recomendación con datos auditables y reutilizables.</p>
+                </div>
+                <div class="card">
+                  <strong>Qué se puede defender</strong>
+                  <p>Las decisiones quedan ligadas a fuentes, versiones y estados del flujo.</p>
+                </div>
+                <div class="card">
+                  <strong>Idea para exponer</strong>
+                  <p>“Cada consulta deja evidencia; cada evidencia tiene fuente; cada caso escalado mantiene contexto.”</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section data-background-gradient="linear-gradient(135deg, #081120, #17314d)">
+          <div class="shell">
+            <div class="section-label">Flujo principal</div>
+            <h2>De síntoma a recomendación</h2>
+            <div class="two-col">
+              <figure class="figure-frame">
+                <img src="../../diagrams/04-sequence-triage.png" alt="Secuencia de triage" />
+                <figcaption>Proceso principal: login, intake, triage, recuperación de evidencia y recomendación trazable.</figcaption>
+              </figure>
+              <div class="timeline">
+                <div class="timeline-item">
+                  <strong>1. Intake</strong>
+                  <span>Paciente registra síntomas, contexto y motivo de consulta.</span>
+                </div>
+                <div class="timeline-item">
+                  <strong>2. Clasificación</strong>
+                  <span>El backend determina severidad y decisión preliminar.</span>
+                </div>
+                <div class="timeline-item">
+                  <strong>3. Evidencia</strong>
+                  <span>El RAG recupera fuentes del corpus curado y las rankea.</span>
+                </div>
+                <div class="timeline-item">
+                  <strong>4. Resultado</strong>
+                  <span>La recomendación queda explicada con score, rank y procedencia.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section data-background-gradient="linear-gradient(135deg, #081120, #17314d)">
+          <div class="shell">
+            <div class="section-label">Escalamiento</div>
+            <h2>Cuándo interviene el profesional</h2>
+            <div class="two-col">
+              <figure class="figure-frame">
+                <img src="../../diagrams/05-sequence-escalation.png" alt="Secuencia de escalamiento" />
+                <figcaption>El caso escalado pasa al panel profesional cuando la severidad o la incertidumbre lo exigen.</figcaption>
+              </figure>
+              <div class="callout-card">
+                <strong>Mensaje clave</strong>
+                <p>
+                  AREP no reemplaza al profesional: le entrega un caso priorizado con evidencia, contexto y una recomendación
+                  justificable.
+                </p>
+                <ul>
+                  <li>Se conserva la trazabilidad del paso automático al humano.</li>
+                  <li>El profesional ve la recomendación y decide la acción final.</li>
+                  <li>Se registran notas y cierre del caso para auditoría.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section data-background-gradient="linear-gradient(135deg, #081120, #1b3652)">
+          <div class="shell">
+            <div class="section-label">Experiencia de usuario</div>
+            <h2>Frontend: dos experiencias, una misma plataforma</h2>
+            <div class="feature-grid">
+              <div class="feature-card">
+                <strong>Paciente</strong>
+                <p>Formulario simple para iniciar una consulta, ver el nivel de severidad y revisar fuentes.</p>
+              </div>
+              <div class="feature-card">
+                <strong>Profesional</strong>
+                <p>Bandeja de casos escalados, revisión de evidencia y cierre del caso con notas.</p>
+              </div>
+              <div class="feature-card">
+                <strong>Legibilidad</strong>
+                <p>Se priorizan jerarquía visual, claridad de estados y exposición de la evidencia.</p>
+              </div>
+              <div class="feature-card">
+                <strong>Despliegue</strong>
+                <p>El frontend ya está publicado como hosting estático en AWS S3.</p>
+              </div>
+            </div>
+            <div class="url-box" style="margin-top: 1rem">
+              <span class="badge">Demo pública</span>
+              <a href="http://arep-production-frontend.s3-website-us-east-1.amazonaws.com/" target="_blank" rel="noreferrer">
+                http://arep-production-frontend.s3-website-us-east-1.amazonaws.com/
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <section data-background-gradient="linear-gradient(135deg, #081120, #17314d)">
+          <div class="shell two-col">
+            <div>
+              <div class="section-label">APIs y observabilidad</div>
+              <h2>Backend expuesto al usuario y al evaluador</h2>
+              <div class="mini-grid">
+                <div class="feature-card">
+                  <strong>Autenticación</strong>
+                  <p><span class="mono">POST /auth/login</span> y <span class="mono">GET /auth/session</span>.</p>
+                </div>
+                <div class="feature-card">
+                  <strong>Consulta clínica</strong>
+                  <p><span class="mono">POST /consultations</span>, <span class="mono">GET /consultations/{id}</span>.</p>
+                </div>
+                <div class="feature-card">
+                  <strong>Triage y evidencia</strong>
+                  <p><span class="mono">POST /consultations/{id}/triage</span> y recommendation.</p>
+                </div>
+                <div class="feature-card">
+                  <strong>Panel profesional</strong>
+                  <p><span class="mono">GET /professional/cases</span> y cierre de casos.</p>
+                </div>
+                <div class="feature-card">
+                  <strong>Salud del sistema</strong>
+                  <p><span class="mono">/health</span>, <span class="mono">/ready</span>, <span class="mono">/metrics</span>, <span class="mono">/rag/status</span>.</p>
+                </div>
+                <div class="feature-card">
+                  <strong>Operación</strong>
+                  <p>Logs, readiness y métricas permiten explicar y defender el comportamiento del sistema.</p>
+                </div>
+              </div>
+            </div>
+            <div class="callout-card">
+              <strong>Qué decir aquí</strong>
+              <p>
+                El backend no solo calcula respuestas: expone salud, depuración y trazabilidad para que la demo sea confiable y
+                el discurso técnico sea verificable.
+              </p>
+              <ul>
+                <li>JWT y roles separan acceso de paciente y profesional.</li>
+                <li>Hay auditoría básica y rate limiting en la capa de API.</li>
+                <li>La salida RAG conserva score, rank y fuentes.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section data-background-gradient="linear-gradient(135deg, #081120, #17314d)">
+          <div class="shell">
+            <div class="section-label">AWS</div>
+            <h2>Despliegue en AWS</h2>
+            <div class="two-col">
+              <figure class="figure-frame">
+                <img src="../../diagrams/06-aws-deployment.png" alt="Diagrama de despliegue AWS" />
+                <figcaption>Frontend estático en S3; blueprint para backend en ECS, base de datos en RDS y artefactos en ECR.</figcaption>
+              </figure>
+              <div class="diagram-meta">
+                <div class="card">
+                  <strong>Estado actual</strong>
+                  <p>La interfaz pública ya está disponible en S3.</p>
+                </div>
+                <div class="card">
+                  <strong>Blueprint</strong>
+                  <p>El repositorio contiene la infraestructura base para escalar backend, datos y observabilidad.</p>
+                </div>
+                <div class="card">
+                  <strong>Cómo explicarlo</strong>
+                  <p>Localmente se trabaja con Compose; en cloud la ruta es S3 + ECS + RDS + ECR + Terraform.</p>
+                </div>
+                <div class="url-box">
+                  <span class="badge">URL</span>
+                  <a href="http://arep-production-frontend.s3-website-us-east-1.amazonaws.com/" target="_blank" rel="noreferrer">
+                    http://arep-production-frontend.s3-website-us-east-1.amazonaws.com/
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section data-background-gradient="linear-gradient(135deg, #081120, #1b3652)">
+          <div class="shell">
+            <div class="section-label">Calidad</div>
+            <h2>Pruebas, métricas y resultados</h2>
+            <div class="stat-grid">
+              <div class="metric-card">
+                <div class="value">2/3</div>
+                <strong>Top-1 hit del RAG</strong>
+                <p>Métrica documentada en la evaluación mínima del corpus.</p>
+              </div>
+              <div class="metric-card">
+                <div class="value">3/3</div>
+                <strong>Top-k hit del RAG</strong>
+                <p>El sistema recupera al menos una fuente esperada en todos los casos.</p>
+              </div>
+              <div class="metric-card">
+                <div class="value">QA</div>
+                <strong>Backend + E2E</strong>
+                <p>Hay pruebas automatizadas para backend, build frontend y flujo de extremo a extremo.</p>
+              </div>
+              <div class="metric-card">
+                <div class="value">Ops</div>
+                <strong>Health / Ready / Metrics</strong>
+                <p>El sistema expone señales operativas claras para demo y soporte técnico.</p>
+              </div>
+            </div>
+            <div class="note-card" style="margin-top: 1rem">
+              <strong>Interpretación técnica</strong>
+              <p>
+                Los resultados son suficientes para una entrega académica sólida: no prometen validación clínica, pero sí un
+                comportamiento reproducible, trazable y defendible.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section data-background-gradient="linear-gradient(135deg, #081120, #17314d)">
+          <div class="shell two-col">
+            <div>
+              <div class="section-label">Seguridad</div>
+              <h2>Seguridad, privacidad y decisiones de diseño</h2>
+              <div class="feature-grid">
+                <div class="feature-card">
+                  <strong>Identidad</strong>
+                  <p>JWT firmado y separación de roles paciente/profesional.</p>
+                </div>
+                <div class="feature-card">
+                  <strong>Control</strong>
+                  <p>Rate limiting y contratos claros reducen abuso accidental y errores de uso.</p>
+                </div>
+                <div class="feature-card">
+                  <strong>Trazabilidad</strong>
+                  <p>Auditoría y evidencia recuperada hacen auditable la recomendación.</p>
+                </div>
+                <div class="feature-card">
+                  <strong>Escalabilidad</strong>
+                  <p>El blueprint AWS deja lista la transición hacia servicios gestionados.</p>
+                </div>
+              </div>
+            </div>
+            <div class="callout-card">
+              <strong>Decisiones que conviene mencionar</strong>
+              <ul>
+                <li>FastAPI para mantener velocidad de desarrollo y validación.</li>
+                <li>RAG local reproducible en lugar de depender de una API externa en la demo.</li>
+                <li>PostgreSQL como base sólida para operación y evolución.</li>
+                <li>AWS como entorno de despliegue público y proyección seria.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section data-background-gradient="linear-gradient(135deg, #081120, #1b3652)">
+          <div class="shell">
+            <div class="section-label">Límites y futuro</div>
+            <h2>Lo que sí hace, lo que no hace y hacia dónde puede crecer</h2>
+            <div class="three-col">
+              <div class="feature-card">
+                <strong>Limitaciones</strong>
+                <p>No hay validación clínica formal ni producción hospitalaria real.</p>
+              </div>
+              <div class="feature-card">
+                <strong>Escalabilidad</strong>
+                <p>Puede evolucionar hacia pgvector, ECS/EKS, secretos gestionados y observabilidad cloud.</p>
+              </div>
+              <div class="feature-card">
+                <strong>Trabajo futuro</strong>
+                <p>Validación con expertos, pruebas con usuarios, hardening y ampliación del corpus/evaluación.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section data-background-gradient="linear-gradient(135deg, #081120, #17314d)">
+          <div class="shell">
+            <div class="section-label">Cierre</div>
+            <h2>Conclusión</h2>
+            <div class="two-col">
+              <div>
+                <p>
+                  AREP quedó como una entrega académica seria: tiene una historia técnica coherente, una arquitectura visible,
+                  una demo desplegada en AWS, pruebas y métricas documentadas, y un guion claro para exponerla.
+                </p>
+                <p>
+                  La idea no es venderlo como producto clínico productivo, sino como una base sólida, bien explicada y lista para
+                  evaluación final.
+                </p>
+              </div>
+              <div class="callout-card">
+                <strong>Mensaje final para cerrar</strong>
+                <p>
+                  “AREP convierte un flujo de triaje asistido por IA en una solución trazable, desplegada y defendible; eso es
+                  exactamente lo que queríamos demostrar en la entrega final.”
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section data-background-gradient="linear-gradient(135deg, #081120, #17314d)">
+          <div class="shell">
+            <div class="section-label">Guion general</div>
+            <h2>Cómo exponerla en equipo</h2>
+            <div class="speaking-order">
+              <div class="script-card">
+                <div class="speaker-number">1</div>
+                <strong>Persona 1</strong>
+                <p>Contexto, problema, propuesta, stack y visión general de la arquitectura.</p>
+                <p class="accent-2">Tiempo sugerido: 4–5 min.</p>
+              </div>
+              <div class="script-card">
+                <div class="speaker-number">2</div>
+                <strong>Persona 2</strong>
+                <p>Diagramas técnicos, backend, RAG, APIs, frontend y pruebas/resultados.</p>
+                <p class="accent-2">Tiempo sugerido: 5–6 min.</p>
+              </div>
+              <div class="script-card">
+                <div class="speaker-number">3</div>
+                <strong>Persona 3</strong>
+                <p>Despliegue AWS, seguridad, métricas, límites, futuro y conclusión.</p>
+                <p class="accent-2">Tiempo sugerido: 4–5 min.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section data-background-gradient="linear-gradient(135deg, #081120, #17314d)">
+          <div class="shell">
+            <div class="section-label">Guion · Persona 1</div>
+            <h2>Qué debe decir el primer expositor</h2>
+            <div class="two-col">
+              <div class="script-card">
+                <strong>Diapositivas</strong>
+                <p>1 a 6: título, narrativa, problema, solución, stack y visión general.</p>
+                <strong>Mensaje central</strong>
+                <p>
+                  Explicar por qué el problema importa, cómo AREP lo aborda y cuáles fueron las decisiones técnicas que dieron
+                  forma al proyecto.
+                </p>
+                <strong>Transición</strong>
+                <p>
+                  “Con el problema y la propuesta claros, ahora vemos cómo se materializa técnicamente en la arquitectura y en el flujo clínico.”
+                </p>
+              </div>
+              <div class="script-card">
+                <strong>Puntos clave</strong>
+                <ul>
+                  <li>Triaje médico asistido por IA con trazabilidad.</li>
+                  <li>Separación entre paciente y profesional.</li>
+                  <li>FastAPI, React, PostgreSQL, Docker y AWS como base técnica.</li>
+                  <li>Decisiones de diseño orientadas a claridad, modularidad y evolución.</li>
+                </ul>
+                <strong>Preguntas probables</strong>
+                <ul>
+                  <li>¿Por qué usar RAG?</li>
+                  <li>¿Por qué no usar un frontend monolítico más simple?</li>
+                  <li>¿Qué hace que esta solución sea académica y no solo una demo?</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section data-background-gradient="linear-gradient(135deg, #081120, #17314d)">
+          <div class="shell">
+            <div class="section-label">Guion · Persona 2</div>
+            <h2>Qué debe decir el segundo expositor</h2>
+            <div class="two-col">
+              <div class="script-card">
+                <strong>Diapositivas</strong>
+                <p>7 a 14: diagramas de contexto, contenedores, backend, datos, secuencias, UX, APIs y pruebas.</p>
+                <strong>Mensaje central</strong>
+                <p>
+                  Demostrar que la arquitectura no está dibujada “a mano alzada”: se ve reflejada en el repositorio, en los
+                  diagramas y en los endpoints reales.
+                </p>
+                <strong>Transición</strong>
+                <p>
+                  “Ya vimos cómo funciona y cómo está construido; ahora pasemos a la parte de despliegue, seguridad y cierre.”
+                </p>
+              </div>
+              <div class="script-card">
+                <strong>Puntos clave</strong>
+                <ul>
+                  <li>Explicar el flujo completo: intake → triage → evidencia → escalamiento.</li>
+                  <li>Mostrar qué significa la trazabilidad en términos de negocio y de datos.</li>
+                  <li>Contar las métricas del RAG con honestidad técnica.</li>
+                  <li>Apoyarse en los diagramas PNG para que el jurado vea la arquitectura real.</li>
+                </ul>
+                <strong>Preguntas probables</strong>
+                <ul>
+                  <li>¿Qué endpoint genera la recomendación?</li>
+                  <li>¿Cómo se conservan las fuentes?</li>
+                  <li>¿Qué mide el top-1 / top-k hit?</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section data-background-gradient="linear-gradient(135deg, #081120, #17314d)">
+          <div class="shell">
+            <div class="section-label">Guion · Persona 3</div>
+            <h2>Qué debe decir el tercer expositor</h2>
+            <div class="two-col">
+              <div class="script-card">
+                <strong>Diapositivas</strong>
+                <p>15 a 19: AWS, calidad, seguridad, límites, futuro y conclusión.</p>
+                <strong>Mensaje central</strong>
+                <p>
+                  Cerrar mostrando que AREP ya tiene una vía de despliegue, una URL pública, una postura clara sobre sus
+                  límites y un roadmap técnico serio.
+                </p>
+                <strong>Transición final</strong>
+                <p>“Con esto cerramos la propuesta y dejamos abiertas las preguntas.”</p>
+              </div>
+              <div class="script-card">
+                <strong>Puntos clave</strong>
+                <ul>
+                  <li>La demo pública ya está en AWS S3.</li>
+                  <li>La infraestructura del backend está modelada en AWS.</li>
+                  <li>Seguridad, observabilidad y límites fueron explicitados.</li>
+                  <li>El proyecto está listo para entregar y defender.</li>
+                </ul>
+                <strong>Preguntas probables</strong>
+                <ul>
+                  <li>¿Qué falta para producción?</li>
+                  <li>¿Cómo escalaría en AWS?</li>
+                  <li>¿Qué harían distinto con más tiempo?</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section data-background-gradient="linear-gradient(135deg, #081120, #1b3652)">
+          <div class="shell">
+            <div class="section-label">Posibles preguntas</div>
+            <h2>Preguntas y respuestas breves</h2>
+            <div class="qs-grid">
+              <div class="question-card">
+                <strong>¿Por qué RAG y no solo un modelo generativo?</strong>
+                <p>Porque el proyecto necesita evidencia recuperable, trazabilidad y una salida explicable.</p>
+              </div>
+              <div class="question-card">
+                <strong>¿La solución ya está en producción?</strong>
+                <p>No. Es una entrega académica sólida con una demo pública y un blueprint cloud bien definido.</p>
+              </div>
+              <div class="question-card">
+                <strong>¿Qué parte está desplegada en AWS?</strong>
+                <p>El frontend público está en S3; el backend y la infraestructura tienen blueprint en el repositorio.</p>
+              </div>
+              <div class="question-card">
+                <strong>¿Qué miden 2/3 y 3/3?</strong>
+                <p>Son métricas de evaluación del RAG: recuperación esperada en top-1 y en top-k.</p>
+              </div>
+              <div class="question-card">
+                <strong>¿Cómo garantizan seguridad?</strong>
+                <p>JWT, roles, auditoría, rate limiting y separación clara entre datos y evidencias.</p>
+              </div>
+              <div class="question-card">
+                <strong>¿Qué sigue después de la entrega?</strong>
+                <p>Hardening, secrets gestionados, validación con expertos y evolución del vector store.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="center" data-background-gradient="linear-gradient(135deg, #06111d, #0f2742)">
+          <div class="shell hero-shell">
+            <div class="eyebrow">Cierre</div>
+            <h2>Gracias</h2>
+            <p class="subtitle">
+              AREP quedó listo para evaluación final: visualmente sólido, técnicamente coherente, trazable y con despliegue
+              público en AWS.
+            </p>
+            <div class="url-box" style="margin-top: 1rem">
+              <span class="badge">Demo pública</span>
+              <a href="http://arep-production-frontend.s3-website-us-east-1.amazonaws.com/" target="_blank" rel="noreferrer">
+                http://arep-production-frontend.s3-website-us-east-1.amazonaws.com/
+              </a>
+            </div>
+          </div>
         </section>
       </div>
     </div>
+
     <script src="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.js"></script>
     <script>
       Reveal.initialize({
         hash: true,
-        slideNumber: true
+        slideNumber: true,
+        progress: true,
+        controls: true,
+        center: false,
+        width: 1600,
+        height: 900,
+        margin: 0.04,
+        minScale: 0.2,
+        maxScale: 1.2,
+        transition: "fade",
+        backgroundTransition: "fade"
       });
     </script>
   </body>
-  </html>
+</html>

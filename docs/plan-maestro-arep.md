@@ -48,9 +48,9 @@ Dejar AREP como un proyecto:
 ### 3.1 Operacion y demo
 
 - [README.md](../README.md)
-- [docs/runbook-final.md](runbook-final.md)
-- [docs/demo-script.md](demo-script.md)
-- [docs/final-checklists.md](final-checklists.md)
+- [docs/guides/runbook-final.md](guides/runbook-final.md)
+- [docs/guides/demo-script.md](guides/demo-script.md)
+- [docs/guides/final-checklists.md](guides/final-checklists.md)
 - [docker-compose.yml](../docker-compose.yml)
 
 ### 3.2 Backend y RAG
@@ -66,7 +66,7 @@ Dejar AREP como un proyecto:
 - [knowledge-base/corpus-manifest.json](../knowledge-base/corpus-manifest.json)
 - [knowledge-base/curation-policy.md](../knowledge-base/curation-policy.md)
 - [knowledge-base/evaluation/rag-evaluation-dataset.json](../knowledge-base/evaluation/rag-evaluation-dataset.json)
-- [docs/rag-evaluation.md](rag-evaluation.md)
+- [docs/technical/rag-evaluation.md](technical/rag-evaluation.md)
 
 ### 3.4 Paquete academico
 
@@ -194,7 +194,7 @@ confirmar que el RAG soporta el discurso tecnico del proyecto.
 
 Acciones:
 
-1. abrir [docs/rag-evaluation.md](rag-evaluation.md)
+1. abrir [docs/technical/rag-evaluation.md](technical/rag-evaluation.md)
 2. revisar el dataset en [knowledge-base/evaluation/rag-evaluation-dataset.json](../knowledge-base/evaluation/rag-evaluation-dataset.json)
 3. confirmar las metricas actuales:
    - `top-1 = 2/3`
@@ -311,7 +311,7 @@ reducir al minimo el riesgo durante la sustentacion.
 
 Acciones:
 
-1. usar [docs/demo-script.md](demo-script.md)
+1. usar [docs/guides/demo-script.md](guides/demo-script.md)
 2. ensayar al menos dos veces el flujo completo
 3. dejar abiertos:
    - app
@@ -338,7 +338,7 @@ Acciones:
    - que ya esta resuelto
    - que falta para produccion real
    - que falta para validacion clinica
-2. usar [docs/final-checklists.md](final-checklists.md) como referencia final
+2. usar [docs/guides/final-checklists.md](guides/final-checklists.md) como referencia final
 3. definir el roadmap post-entrega:
    - vector store productivo
    - secrets manager

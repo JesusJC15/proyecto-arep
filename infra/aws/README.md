@@ -1,6 +1,6 @@
 # Blueprint AWS base - AREP
 
-Este directorio contiene un blueprint base para proyectar AREP sobre AWS sin exigir despliegue real en esta fase.
+Este directorio contiene un blueprint base para proyectar AREP sobre AWS. Contiene plantillas y recomendaciones para desplegar frontend estático, backend contenedorizado y la base de datos.
 
 ## Objetivo
 
@@ -33,6 +33,6 @@ Mapear la topologia local de `frontend + backend + postgres` hacia una arquitect
 
 ## Limites
 
-- no despliega realmente en AWS en esta fase
-- no incluye Bedrock ni vector store productivo
-- no incorpora WAF, Secrets Manager ni observabilidad avanzada
+- el frontend ya puede desplegarse como hosting estático en S3 (ej. la demo pública está en S3).
+- las plantillas aquí son base y requieren ajustes para producción (secrets, WAF, observabilidad, backups).
+- no incluye integraciones propietarias (Bedrock) ni vector store productivo por defecto

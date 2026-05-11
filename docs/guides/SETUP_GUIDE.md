@@ -102,7 +102,7 @@ arep-backend    Up (healthy)
 arep-frontend   Up (healthy)
 ```
 
-If any service is not "Up", see [Troubleshooting](#troubleshooting) below.
+If any service is not "Up", see Troubleshooting.
 
 ### Step 6: Access the Application
 
@@ -134,30 +134,7 @@ The application uses environment variables defined in `docker-compose.yml`. To c
 cp .env.example .env
 ```
 
-2. Edit `.env` with your settings:
-
-```env
-# Database
-AREP_DATABASE_URL=postgresql+psycopg://arep_user:arep_pass@arep-postgres:5432/arep_db
-
-# JWT Authentication
-AREP_JWT_SECRET=your-secret-key-change-this-in-production
-AREP_JWT_ALGORITHM=HS256
-AREP_ACCESS_TOKEN_TTL_MINUTES=60
-
-# CORS (allowed origins)
-AREP_CORS_ORIGINS=http://localhost:4173,http://localhost:5173
-
-# RAG Configuration
-AREP_RAG_EMBEDDING_PROVIDER=local
-AREP_RAG_EMBEDDING_MODEL=tfidf-hash
-AREP_RAG_TOP_K=3
-AREP_RAG_CHUNK_SIZE=200
-AREP_RAG_CHUNK_OVERLAP=20
-
-# Logging
-AREP_ENV=development
-```
+2. Edit `.env` with your settings.
 
 3. Restart services to apply changes:
 ```bash
@@ -216,17 +193,7 @@ Expected response:
 curl http://localhost:8000/rag/status
 ```
 
-Expected response:
-```json
-{
-  "corpus_version": "2026-05-phase4-expanded",
-  "documents_in_corpus": 16,
-  "chunks_in_index": "...",
-  "embedding_provider": "local",
-  "embedding_model": "tfidf-hash",
-  "status": "ready"
-}
-```
+Expected response includes corpus info and `status: ready`.
 
 ### Run Backend Tests
 
@@ -234,8 +201,6 @@ Expected response:
 cd backend
 python -m pytest -q
 ```
-
-Expected: All tests pass (✓ marks)
 
 ### Run Frontend E2E Tests
 
@@ -246,109 +211,18 @@ npx playwright install chromium
 npm run test:e2e
 ```
 
-Expected: Test suite passes with 1/1 passed
-
 ## Operational Commands
 
-### View Logs
+View logs, stop/restart services and reset database are covered in Troubleshooting.
 
-```bash
-# View all service logs in real-time
-docker compose logs -f
+## Nota sobre despliegue en AWS
 
-# View only backend logs
-docker compose logs -f arep-backend
+El frontend ya está desplegado públicamente en AWS S3 en modo hosting estático y se puede acceder en:
 
-# View only frontend logs
-docker compose logs -f arep-frontend
+- https://arep-production-frontend.s3-website-us-east-1.amazonaws.com/
 
-# View only database logs
-docker compose logs -f arep-postgres
-```
-
-### Stop Services
-
-```bash
-# Stop all services (data persists)
-docker compose down
-
-# Stop and remove all data (clean reset)
-docker compose down -v
-```
-
-### Restart Services
-
-```bash
-# Restart all services
-docker compose restart
-
-# Restart specific service
-docker compose restart arep-backend
-```
-
-### Reset Database
-
-```bash
-# Remove database volume and restart
-docker compose down -v
-docker compose up -d
-```
-
-**Warning**: This deletes all data in the database.
-
-### View Database
-
-Connect to PostgreSQL directly:
-
-```bash
-docker compose exec arep-postgres psql -U arep_user -d arep_db
-```
-
-Common SQL commands:
-```sql
--- List all tables
-\dt
-
--- View consultations
-SELECT * FROM consultations;
-
--- View triage results
-SELECT * FROM triage_results;
-
--- Exit
-\q
-```
-
-## Common Issues & Quick Fixes
-
-| Issue | Solution |
-|-------|----------|
-| Port already in use | Kill blocking process or change port in `docker-compose.yml` |
-| Docker daemon not running | Start Docker Desktop application |
-| Permission denied (Linux) | Run `docker` with `sudo` or add user to `docker` group |
-| Services fail to start | Check logs with `docker compose logs` |
-| Database connection error | Ensure `AREP_DATABASE_URL` is correct |
-| Frontend shows "Cannot reach API" | Check `VITE_API_BASE_URL` in `frontend/vite.config.ts` |
-
-For detailed troubleshooting, see [TROUBLESHOOTING.md](TROUBLESHOOTING.md).
-
-## Next Steps
-
-1. **Explore the Application**: Log in as `ana.patient` and create a consultation
-2. **Review the Architecture**: See [docs/architecture/README.md](docs/architecture/README.md)
-3. **Read the Documentation**: See [README.md](README.md) for full project overview
-4. **Examine Demo Flow**: See [docs/demo-script.md](docs/demo-script.md) for guided walkthrough
-5. **Review Knowledge Base**: See [knowledge-base/](knowledge-base/) for clinical content
-
-## Support
-
-For issues or questions:
-1. Check [TROUBLESHOOTING.md](TROUBLESHOOTING.md)
-2. Review logs: `docker compose logs -f`
-3. Check Docker status: `docker compose ps`
-4. Consult the [README.md](README.md)
+Este repositorio contiene plantillas y notas para desplegar el backend y la infraestructura en AWS (ver `infra/aws/`). La configuración actual es una demo reproducible; para producción se recomienda revisar las secciones de seguridad y escalabilidad en `docs/deployment/AWS_DEPLOYMENT_QUICK.md`.
 
 ---
 
-**Last Updated**: May 10, 2026  
-**Version**: 1.0
+**Last Updated**: May 11, 2026

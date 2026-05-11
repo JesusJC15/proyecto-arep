@@ -12,4 +12,4 @@
 | RF-08 Revision profesional | Frontend profesional, professional cases | `01-c4-context.mmd`, `02-c4-container.mmd`, `05-sequence-escalation.mmd` | Alcance, Flujo principal |
 | RNF-01 Trazabilidad | Audit trail, retrieval trace, evidence source, recommendation | `03-backend-components.mmd`, `04-sequence-triage.mmd`, `07-data-model.mmd` | Trazabilidad clinica, Modelo de datos |
 | RNF-06 Preparacion cloud | AWS deployment mapping | `06-aws-deployment.mmd` | Arquitectura general |
-| RNF-07 Evaluacion reproducible | Evaluation dataset, rag metrics, retrieval tests | `03-backend-components.mmd`, `traceability-matrix.md`, `docs/rag-evaluation.md` | Resultados y validacion inicial |
+| RNF-07 Evaluacion reproducible | Evaluation dataset, rag metrics, retrieval tests | `03-backend-components.mmd`, `traceability-matrix.md`, `docs/technical/rag-evaluation.md` | Resultados y validacion inicial |

@@ -160,18 +160,18 @@ Cobertura clínica: 15% de lo necesario
 
 ```
 ✅ README.md                           - Presente pero breve
-✅ docs/runbook-final.md              - Presente, bueno
-✅ docs/demo-script.md                - Presente, bueno
-✅ docs/final-checklists.md           - Presente
+✅ docs/guides/runbook-final.md       - Presente, bueno
+✅ docs/guides/demo-script.md         - Presente, bueno
+✅ docs/guides/final-checklists.md    - Presente
 ✅ docs/architecture/README.md        - Presente, estructurado
 ✅ docs/architecture/*.mmd            - 7 diagramas C4 presentes
-✅ docs/rag-evaluation.md             - Presente, resumido
+✅ docs/technical/rag-evaluation.md   - Presente, resumido
 ✅ backend/README.md                  - Presente, minimalista
 ✅ frontend/README.md                 - Presente, minimalista
 ❌ docs/DEPLOYMENT.md                 - No existe
 ❌ docs/DEVELOPMENT.md                - No existe
-❌ docs/TROUBLESHOOTING.md            - No existe
-❌ docs/API_REFERENCE.md              - No existe (solo ejemplos)
+✅ docs/guides/TROUBLESHOOTING.md     - Reubicado
+✅ docs/technical/API_REFERENCE.md    - Reubicado
 ❌ docs/SECURITY.md                   - No existe
 ❌ docs/DATA_MODEL.md                 - No existe (algunos diagramas)
 ❌ docs/RAG_PIPELINE.md               - No existe
@@ -468,10 +468,10 @@ NO CRÍTICO PARA ENTREGA:
 **Objetivo**: Guías claras para instalar, ejecutar y troubleshoot
 
 **Deliverables**:
-1. `docs/SETUP_GUIDE.md` - Windows/Mac/Linux paso a paso
-2. `docs/QUICKSTART.md` - 5 minutos para tener funcionando
-3. `docs/TROUBLESHOOTING.md` - Los 10 problemas más comunes
-4. `docs/API_REFERENCE.md` - Todos los endpoints con ejemplos
+1. `docs/guides/SETUP_GUIDE.md` - Windows/Mac/Linux paso a paso
+2. `docs/guides/QUICKSTART.md` - 5 minutos para tener funcionando
+3. `docs/guides/TROUBLESHOOTING.md` - Los problemas más comunes
+4. `docs/technical/API_REFERENCE.md` - Todos los endpoints con ejemplos
 5. `.env.example` - Mejorado con explicaciones
 
 ### Phase 3: Documentación Técnica Avanzada (6 horas)
@@ -479,7 +479,7 @@ NO CRÍTICO PARA ENTREGA:
 
 **Deliverables**:
 1. `docs/ARCHITECTURE_DEEP_DIVE.md` - Explicación detallada de decisiones
-2. `docs/DEPLOYMENT_AWS.md` - Paso a paso para AWS
+2. `docs/deployment/DEPLOYMENT_AWS.md` - Paso a paso para AWS
 3. `docs/SECURITY.md` - Prácticas de seguridad
 4. `docs/TESTING_GUIDE.md` - Cómo agregar tests
 5. `docs/PERFORMANCE.md` - Benchmarks y optimizaciones

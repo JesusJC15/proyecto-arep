@@ -1,54 +1,69 @@
-# AREP - Entrega final integral
+# AREP — Entrega final profesional
 
-AREP es una plataforma academica de triaje medico asistido por IA con autenticacion por roles, flujo paciente-profesional, recomendacion trazable y un pipeline RAG reproducible. La entrega final deja una demo ejecutable con `Docker Compose`, una proyeccion AWS defendible y un paquete academico listo para sustentacion.
+AREP es una plataforma académica de triaje médico asistido por IA, diseñada para demostrar un flujo completo: captura de síntomas, evaluación asistida por reglas y modelos, recuperación semántica (RAG) con trazabilidad y roles (paciente/profesional). Este repositorio contiene la demo completa, la infraestructura de ejemplo, la documentación académica y los artefactos para presentación.
 
-## Que incluye
+## Qué incluye
 
-- frontend React con evidencia visible por score, rank y procedencia
-- backend FastAPI con JWT, auditoria, metricas y `rag/status`
-- Postgres como base oficial de demo
-- corpus versionado con evaluacion RAG reproducible
-- runbook final, guion de demo y checklists de cierre
-- blueprint AWS base para `red + app + datos`
-- paper alineado y slides HTML en `Reveal.js`
+- Frontend: aplicación React (canal paciente y canal profesional) con visualización de evidencia, scores y trazabilidad.
+- Backend: API en FastAPI con autenticación JWT, control de roles, auditoría, métricas y endpoints RAG (`/rag/status`).
+- Base de datos: Postgres configurada para la demo.
+- Knowledge-base: corpus y procesos de evaluación RAG y scripts reproducibles para indexado.
+- Infraestructura de ejemplo: plantillas y notas para desplegar en AWS (blueprint y diagramas).
+- Material académico: paper, slides y documentación de respaldo para sustentación.
 
 ## Arquitectura resumida
 
-- `frontend`: canal paciente y canal profesional
-- `backend`: API, triage por reglas, retrieval semantico local y trazabilidad
-- `postgres`: persistencia oficial de demo
-- `knowledge-base`: corpus curado y dataset de evaluacion
-- `artifacts`: indice RAG reproducible en runtime
+- `frontend`: React + Vite, bundle estático listo para hosting estático (S3/CloudFront).
+- `backend`: FastAPI con dependencias, servicios de triage, repositorios y endpoints REST.
+- `postgres`: persistencia relacional para usuarios y eventos de auditoría.
+- `knowledge-base`: corpus y pipelines para construir índices RAG (vectores, metadatos).
+- `artifacts`: índices y datos reproducibles para evaluación.
 
-## Arranque oficial
+## Demo desplegada
+
+La interfaz frontend está desplegada en AWS (hosting estático S3 public) y accesible públicamente en:
+
+- https://arep-production-frontend.s3-website-us-east-1.amazonaws.com/
+
+Nota: el backend en este repositorio está preparado para despliegue (ver `infra/aws`) y puede ejecutarse localmente con Docker Compose.
+
+## Arranque rápido (local)
+
+1. Clonar repositorio:
+
+```bash
+git clone https://github.com/JesusJC15/proyecto-arep.git
+cd proyecto-arep
+```
+
+2. Levantar demo con Docker Compose (recomendado para demo local reproducible):
 
 ```bash
 docker compose up --build -d
 ```
 
-URLs principales:
+3. Rutas útiles:
 
-- App: [http://localhost:4173](http://localhost:4173)
-- Health: [http://localhost:8000/health](http://localhost:8000/health)
-- Ready: [http://localhost:8000/ready](http://localhost:8000/ready)
-- Metrics: [http://localhost:8000/metrics](http://localhost:8000/metrics)
-- RAG status: [http://localhost:8000/rag/status](http://localhost:8000/rag/status)
+- Frontend: http://localhost:4173
+- Backend Health: http://localhost:8000/health
+- Metrics: http://localhost:8000/metrics
+- RAG status: http://localhost:8000/rag/status
 
-Usuarios demo:
+4. Usuarios demo (preconfigurados):
 
-- `ana.patient / demo123`
-- `dr.suarez / demo123`
+- `ana.patient` / `demo123`
+- `dr.suarez` / `demo123`
 
-## Validacion
+## Tests y validación
 
-Backend:
+Backend (pytests):
 
 ```bash
 cd backend
 python -m pytest -q
 ```
 
-Frontend:
+Frontend (E2E):
 
 ```bash
 cd frontend
@@ -57,12 +72,12 @@ npm run build
 npm run test:e2e
 ```
 
-## Demo y operacion
+## Documentación clave
 
-- Runbook final: [docs/runbook-final.md](docs/runbook-final.md)
-- Guion de demo: [docs/demo-script.md](docs/demo-script.md)
-- Checklists finales: [docs/final-checklists.md](docs/final-checklists.md)
-- Evaluacion RAG: [docs/rag-evaluation.md](docs/rag-evaluation.md)
+- Runbook y operación: [docs/guides/runbook-final.md](docs/guides/runbook-final.md)
+- Guion de demo: [docs/guides/demo-script.md](docs/guides/demo-script.md)
+- Checklists: [docs/guides/final-checklists.md](docs/guides/final-checklists.md)
+- Evaluación RAG: [docs/technical/rag-evaluation.md](docs/technical/rag-evaluation.md)
 
 Reset completo de demo:
 
@@ -70,20 +85,24 @@ Reset completo de demo:
 pwsh ./scripts/demo-reset.ps1
 ```
 
-## Paquete academico
+## Paquete académico y artefactos
 
-- Paper: [paper/main.tex](paper/main.tex)
-- Diagramas: [docs/architecture/README.md](docs/architecture/README.md)
-- Slides HTML: [docs/presentation/index.html](docs/presentation/index.html)
+- Paper y referencias: [paper/main.tex](paper/main.tex)
+- Diagramas C4 y secuencias: [docs/architecture/README.md](docs/architecture/README.md)
+- Slides (Reveal.js): [docs/presentation/index.html](docs/presentation/index.html)
 
-## Blueprint AWS
+## Infraestructura y despliegue
 
-- Diagrama objetivo: [docs/architecture/06-aws-deployment.mmd](docs/architecture/06-aws-deployment.mmd)
-- Blueprint base: [infra/aws/README.md](infra/aws/README.md)
+- Diagrama objetivo (Mermaid/MMD): [docs/architecture/06-aws-deployment.mmd](docs/architecture/06-aws-deployment.mmd)
+- Blueprint y scripts para AWS: [infra/aws/README.md](infra/aws/README.md)
 
-## Limites
+### Estado actual de despliegue
 
-- No hay despliegue real en AWS en esta fase
-- No hay validacion clinica formal
-- El RAG sigue siendo academico aunque ya es trazable y evaluable
-- FHIR se mantiene como proyeccion, no como integracion activa
+- Frontend: desplegado en S3 (URL arriba).
+- Backend: preparado para despliegue; se puede instalar en EC2 / ECS / EKS o Lambda según preferencia — ver `infra/aws` para plantillas y notas.
+
+## Limitaciones conocidas
+
+- No existe validación clínica formal (investigación/propósito académico).
+- Integración con sistemas FHIR es una proyección/documentada, no una integración productiva.
+- El proyecto es una demo académica y de investigación; producción requeriría hardening adicional.

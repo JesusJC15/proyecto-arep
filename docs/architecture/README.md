@@ -1,6 +1,22 @@
 # Diagramas de Arquitectura
 
-Este directorio contiene las vistas editables del proyecto AREP. Todas las vistas se mantienen en formato Mermaid para facilitar edicion, trazabilidad y exportacion posterior.
+Este directorio contiene las vistas editables del proyecto AREP. Todas las vistas se mantienen en formato Mermaid para facilitar edición, trazabilidad y exportación posterior.
+
+## Visión general
+
+AREP se organiza en cuatro bloques:
+
+- Presentación: frontend React/Vite para paciente y profesional.
+- Servicios: backend FastAPI con autenticación, triage, auditoría, métricas y RAG.
+- Datos: PostgreSQL, corpus curado y artefactos reproducibles del índice RAG.
+- Despliegue: stack local con Docker Compose y blueprint AWS para la capa cloud.
+
+## Decisiones de diseño
+
+- Separación clara entre UI, API, persistencia y conocimiento clínico.
+- RAG reproducible con corpus versionado y evidencia visible en la respuesta.
+- AWS tratado como proyección técnica defendible, no como dependencia obligatoria de ejecución local.
+- Mermaid como formato fuente para mantener los diagramas versionables.
 
 ## Archivos
 
@@ -17,8 +33,8 @@ Este directorio contiene las vistas editables del proyecto AREP. Todas las vista
 
 1. Revisar primero el contexto y contenedores.
 2. Alinear los diagramas con el articulo en `paper/main.tex`.
-3. Contrastar los diagramas con `docs/rag-evaluation.md` y `knowledge-base/corpus-manifest.json`.
-4. Contrastar la proyeccion cloud con `infra/aws/README.md` y el `docker-compose.yml` oficial.
+3. Contrastar los diagramas con `docs/technical/rag-evaluation.md` y `knowledge-base/corpus-manifest.json`.
+4. Contrastar la proyección cloud con `infra/aws/README.md` y el `docker-compose.yml` oficial.
 5. Exportar a PNG o PDF con Mermaid CLI si se requiere insertar figuras en una version final del articulo.
 
 ## Convenciones
@@ -26,3 +42,12 @@ Este directorio contiene las vistas editables del proyecto AREP. Todas las vista
 - `patient` y `professional` son los unicos roles del MVP.
 - `FHIR Adapter` se mantiene como componente futuro, no implementado.
 - `RAG Service` ya representa un pipeline real con corpus curado, chunking, embeddings locales e indice reproducible.
+
+## Diagrama de lectura recomendado
+
+1. `01-c4-context.mmd` para entender el alcance.
+2. `02-c4-container.mmd` para ver la partición por contenedores.
+3. `03-backend-components.mmd` para entender el backend.
+4. `04-sequence-triage.mmd` y `05-sequence-escalation.mmd` para seguir el flujo funcional.
+5. `06-aws-deployment.mmd` para la proyección cloud.
+6. `07-data-model.mmd` para la persistencia y trazabilidad.
