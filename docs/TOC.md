@@ -20,6 +20,7 @@ Bienvenido a la documentación organizada del proyecto AREP. Aquí están los en
 ## Deployment (AWS)
 
 - [Deployment Index](deployment/AWS_DEPLOYMENT_INDEX.md)
+- [Quick Guide](deployment/AWS_DEPLOYMENT_QUICK.md)
 - [Commands Cheatsheet](deployment/AWS_COMMANDS_CHEATSHEET.md)
 
 ## Presentación

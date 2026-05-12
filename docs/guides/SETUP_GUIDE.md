@@ -10,7 +10,8 @@ Complete step-by-step guide to set up, configure, and run the AREP platform loca
 - **Git**: Version 2.30+ ([download](https://git-scm.com))
 - **RAM**: Minimum 4GB recommended (8GB for smooth operation)
 - **Disk Space**: ~2GB free for Docker images
-- **Ports Available**: 5173 (frontend), 8000 (backend), 5432 (database)
+- **Ports Available**: 4173 (frontend via Docker Compose), 8000 (backend), 5432 (database)
+- **Ports Optional**: 5173 (frontend dev server when running Vite directly)
 
 ### System-Specific Notes
 
@@ -74,8 +75,8 @@ netstat -ano | findstr :5432
 **macOS/Linux**:
 
 ```bash
-# Check all three ports:
-lsof -i :5173
+# Check all three ports for the Compose stack:
+lsof -i :4173
 lsof -i :8000
 lsof -i :5432
 ```
@@ -169,8 +170,8 @@ docker compose restart arep-backend
 
 To customize frontend API endpoint:
 
-1. Edit `frontend/vite.config.ts` and update `VITE_API_BASE_URL` if needed
-2. Or set environment variable before build:
+1. Set `VITE_API_BASE_URL` before building the frontend image or running Vite directly.
+2. For local Vite development, export the variable before `npm run dev`:
 
 ```bash
 export VITE_API_BASE_URL=http://localhost:8000
@@ -236,7 +237,7 @@ El frontend ya está desplegado públicamente en AWS S3 en modo hosting estátic
 
 - <https://arep-production-frontend.s3-website-us-east-1.amazonaws.com/>
 
-Este repositorio contiene plantillas y notas para desplegar el backend y la infraestructura en AWS (ver `infra/aws/`). La configuración actual es una demo reproducible; para producción se recomienda revisar las secciones de seguridad y escalabilidad en `docs/deployment/AWS_DEPLOYMENT_QUICK.md`.
+Este repositorio contiene plantillas y notas para desplegar el backend y la infraestructura en AWS (ver `infra/aws/` y `docs/deployment/`). La configuracion actual es una demo reproducible; para produccion se recomienda revisar [AWS_DEPLOYMENT_QUICK.md](../deployment/AWS_DEPLOYMENT_QUICK.md).
 
 ---
 

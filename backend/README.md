@@ -4,6 +4,7 @@ Backend FastAPI para AREP. Implementa JWT firmado, password hashing, repositorio
 
 ## Endpoints
 
+- `GET /`
 - `POST /auth/login`
 - `GET /auth/session`
 - `POST /consultations`
@@ -15,6 +16,7 @@ Backend FastAPI para AREP. Implementa JWT firmado, password hashing, repositorio
 - `POST /professional/cases/{id}/assign`
 - `POST /professional/cases/{id}/review`
 - `GET /rag/status`
+- `GET /rag/source?uri=...`
 - `GET /health`
 - `GET /ready`
 - `GET /metrics`

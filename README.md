@@ -89,7 +89,6 @@ pwsh ./scripts/demo-reset.ps1
 
 - Paper y referencias: [paper/main.tex](paper/main.tex)
 - Diagramas C4 y secuencias: [docs/architecture/README.md](docs/architecture/README.md)
-- Slides (Reveal.js): [docs/presentation/index.html](docs/presentation/index.html)
 
 ## Infraestructura y despliegue
 
