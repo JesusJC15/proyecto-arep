@@ -1,22 +1,33 @@
+%%{init: {"theme": "base", "themeVariables": {"fontFamily": "Inter, Segoe UI, sans-serif", "primaryColor": "#E8F3FF", "primaryBorderColor": "#0F4C81", "lineColor": "#355070", "secondaryColor": "#EAFBF2", "tertiaryColor": "#FFF5E6"}}}%%
 sequenceDiagram
+    autonumber
     actor Patient as Paciente
     participant UI as Frontend Paciente
-    participant API as FastAPI
-    participant TRIAGE as Triage Module
-    participant RAG as RAG Service
-    participant VDB as Vector Store
-    participant LLM as LLM
+    participant API as FastAPI /consultations
+    participant Store as SQLRepository
+    participant TRIAGE as triage_engine
+    participant RAG as rag_service
+    participant IDX as Artifact Index
+    participant CORPUS as Corpus Curado
 
-    Patient->>UI: Registra sintomas y contexto
+    Patient->>UI: Completa sintomas y contexto
     UI->>API: POST /consultations
+    API->>Store: create_consultation(payload)
+    Store-->>API: ConsultationRecord (SUBMITTED)
     API-->>UI: Consulta creada
+
     UI->>API: POST /consultations/{id}/triage
-    API->>TRIAGE: Ejecutar flujo de triage
-    TRIAGE->>RAG: Solicitar recomendacion fundamentada
-    RAG->>VDB: Buscar evidencia relevante
-    VDB-->>RAG: Fragmentos y fuentes
-    RAG->>LLM: Prompt con contexto clinico
-    LLM-->>RAG: Recomendacion estructurada
-    RAG-->>TRIAGE: Severidad, recomendacion, fuentes
-    TRIAGE-->>API: Resultado consolidado
-    API-->>UI: Resultado y decision final
+    API->>Store: get_consultation(id)
+    Store-->>API: ConsultationRecord
+    API->>TRIAGE: evaluate_consultation(consultation, rag_service)
+    TRIAGE->>RAG: retrieve(query_terms)
+    RAG->>IDX: cargar vectores y chunks
+    RAG->>CORPUS: resolver metadatos y contenido curado
+    CORPUS-->>RAG: documentos y chunks versionados
+    RAG-->>TRIAGE: RetrievalTrace + evidence_sources rankeadas
+    TRIAGE-->>API: triage_result + recommendation + metadata RAG
+    API->>Store: save_triage(...)
+    API->>Store: record_retrieval_trace(...)
+    API->>Store: record_audit_event("rag.retrieve")
+    Store-->>API: ConsultationRecord (RECOMMENDED/ESCALATED)
+    API-->>UI: Resultado con severidad, decision, rank y score

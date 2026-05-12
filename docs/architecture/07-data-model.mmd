@@ -1,58 +1,104 @@
+%%{init: {"theme": "base", "themeVariables": {"fontFamily": "Inter, Segoe UI, sans-serif", "primaryColor": "#E8F3FF", "primaryBorderColor": "#0F4C81", "lineColor": "#355070", "secondaryColor": "#EAFBF2", "tertiaryColor": "#FFF5E6"}}}%%
 erDiagram
     USER ||--o{ CONSULTATION : creates
     USER ||--o{ ESCALATION_CASE : reviews
-    USER ||--|| PATIENT_PROFILE : owns
     CONSULTATION ||--o{ SYMPTOM_ENTRY : contains
     CONSULTATION ||--|| TRIAGE_RESULT : produces
     CONSULTATION ||--|| RECOMMENDATION : produces
-    CONSULTATION ||--o{ EVIDENCE_SOURCE : references
+    RECOMMENDATION ||--o{ EVIDENCE_SOURCE : cites
     CONSULTATION ||--o| ESCALATION_CASE : may_create
+    CORPUS_DOCUMENT ||--o{ CORPUS_CHUNK : is_split_into
+    CONSULTATION ||--o{ RAG_RETRIEVAL_TRACE : generates
+    RAG_INDEX_RUN ||--o{ CORPUS_DOCUMENT : indexes_version
 
     USER {
-      string id
+      string id PK
       string username
+      string full_name
       string role
     }
-    PATIENT_PROFILE {
-      string id
-      string user_id
-      string age_range
-      string chronic_conditions
-    }
     CONSULTATION {
-      string id
-      string patient_user_id
+      string id PK
+      string patient_user_id FK
+      string chief_complaint
+      string context_notes
+      string age_range
       string status
       datetime created_at
     }
     SYMPTOM_ENTRY {
-      string id
-      string consultation_id
+      string id PK
+      string consultation_id FK
       string symptom
       string duration
       string intensity
+      string notes
     }
     TRIAGE_RESULT {
-      string id
-      string consultation_id
+      string consultation_id PK,FK
       string severity
       string decision
+      string rationale
+      float confidence
+      string prompt_version
     }
     RECOMMENDATION {
-      string id
-      string consultation_id
+      string consultation_id PK,FK
       string summary
       string disclaimer
+      string retrieval_version
+      string embedding_provider
+      string embedding_model
+      string corpus_version
+      datetime generated_at
     }
     EVIDENCE_SOURCE {
-      string id
-      string consultation_id
-      string title
-      string source_type
+      string id PK
+      string recommendation_consultation_id FK
+      string document_id
+      string chunk_id
+      float retrieval_score
+      int rank
+      string retrieval_method
+      string match_rationale
     }
     ESCALATION_CASE {
-      string id
-      string consultation_id
-      string assigned_professional_id
+      string id PK
+      string consultation_id FK
+      string assigned_professional_id FK
       string review_status
+      string reason
+      datetime created_at
+    }
+    CORPUS_DOCUMENT {
+      string document_id PK
+      string title
+      string source_uri
+      string clinical_topic
+      string curation_status
+      string corpus_version
+    }
+    CORPUS_CHUNK {
+      string chunk_id PK
+      string document_id FK
+      int chunk_index
+      int token_count
+    }
+    RAG_INDEX_RUN {
+      string id PK
+      string corpus_version
+      string retrieval_version
+      string embedding_provider
+      string embedding_model
+      int documents
+      int chunks
+    }
+    RAG_RETRIEVAL_TRACE {
+      string id PK
+      string consultation_id FK
+      string retrieval_version
+      string embedding_provider
+      string corpus_version
+      int candidates_considered
+      int top_k
     }

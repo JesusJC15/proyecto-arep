@@ -1,22 +1,47 @@
-flowchart TD
-    api["FastAPI Router"]
-    auth["Auth Module"]
-    consultations["Consultations Module"]
-    triage["Triage Module"]
-    rag["RAG Module"]
-    evidence["Evidence Module"]
-    audit["Audit Module"]
-    repo["Repository Layer"]
+%%{init: {"theme": "base", "themeVariables": {"fontFamily": "Inter, Segoe UI, sans-serif", "primaryColor": "#E8F3FF", "primaryBorderColor": "#0F4C81", "lineColor": "#355070", "secondaryColor": "#EAFBF2", "tertiaryColor": "#FFF5E6"}}}%%
+flowchart TB
+    api_router["api/router.py"]
+    meta["routes/meta.py"]
+    auth["routes/auth.py"]
+    consultations["routes/consultations.py"]
+    prof_cases["routes/professional_cases.py"]
+    deps["dependencies.py"]
+    security["core/security.py"]
+    triage_engine["services/triage_engine.py"]
+    rag["services/rag_service.py"]
+    embeddings["services/embeddings.py"]
+    repo["repositories/sql_repository.py"]
+    domain["schemas/domain.py"]
+    corpus["knowledge-base/corpus-manifest.json"]
+    evalset["knowledge-base/evaluation/rag-evaluation-dataset.json"]
+    index["artifacts/rag-index.json"]
 
-    api --> auth
-    api --> consultations
-    api --> triage
-    api --> rag
-    api --> evidence
-    api --> audit
-    auth --> repo
-    consultations --> repo
-    triage --> repo
-    rag --> evidence
-    evidence --> repo
-    audit --> repo
+    api_router --> meta
+    api_router --> auth
+    api_router --> consultations
+    api_router --> prof_cases
+
+    auth --> deps
+    consultations --> deps
+    prof_cases --> deps
+    deps --> security
+    deps --> repo
+    deps --> rag
+
+    consultations --> triage_engine
+    triage_engine --> rag
+    rag --> embeddings
+    rag --> repo
+    rag --> corpus
+    rag --> index
+    rag --> domain
+    repo --> domain
+    rag --> evalset
+
+    classDef api fill:#E8F3FF,stroke:#0F4C81,stroke-width:1px,color:#1B263B;
+    classDef service fill:#EAFBF2,stroke:#2D6A4F,stroke-width:1px,color:#0B3D2E;
+    classDef data fill:#FFF5E6,stroke:#BC6C25,stroke-width:1px,color:#6F4518;
+
+    class api_router,meta,auth,consultations,prof_cases,deps,security api;
+    class triage_engine,rag,embeddings service;
+    class repo,domain,corpus,evalset,index data;

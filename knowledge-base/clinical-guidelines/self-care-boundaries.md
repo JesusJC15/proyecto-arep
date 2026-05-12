@@ -1,17 +1,7 @@
-# Self-care Boundaries
+# Self Care Boundaries
 
-## Purpose
+Self care guidance is appropriate when symptoms are mild, stable, and not associated with breathing difficulty, chest pain, confusion, dehydration, or functional decline. Advice should remain practical: rest, hydration, light meals, symptom diary, and explicit warning signs.
 
-This document describes the lower-risk branch of the MVP for educational use.
+The boundary of self care ends when the patient reports higher intensity, prolonged deterioration, recurrent episodes, or context suggesting vulnerability. If the symptoms stop responding to rest or become more frequent, the recommendation should move to watchful waiting or professional review.
 
-## Principles
-
-- Only provide self-care orientation when the collected information is consistent and no escalation trigger is present.
-- Recommendations must include a reminder that the system does not replace a clinician.
-- Every self-care recommendation should still preserve evidence sources and consultation metadata.
-
-## Response pattern
-
-- Severity: low or medium
-- Decision: self-care with warning signs
-- Follow-up: recommend professional consultation if symptoms persist or worsen
+Evidence for self care should never remove the disclaimer that the system is an academic prototype and cannot replace clinical judgement.

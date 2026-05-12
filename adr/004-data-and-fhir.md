@@ -1,4 +1,4 @@
-# ADR-004 - Persistencia relacional con capacidad vectorial y adaptador FHIR conceptual
+# ADR-004 - Persistencia relacional, indice local reproducible y ruta futura a capacidad vectorial
 
 - Estado: Aceptada
 - Fecha: 2026-03-22
@@ -9,15 +9,16 @@ El MVP necesita modelar consultas, usuarios y resultados clinicos de forma trans
 
 ## Decision
 
-Se adopta PostgreSQL como base operativa, con capacidad vectorial planificada para el prototipo, y se modela una capa futura de interoperabilidad basada en HL7 FHIR.
+Se adopta una estrategia en dos niveles: persistencia operativa en SQLite/PostgreSQL para entidades transaccionales y corpus/chunks, mas un indice semantico local reproducible como artefacto del prototipo. La ruta futura hacia `pgvector` se conserva como evolucion natural, y la interoperabilidad basada en HL7 FHIR permanece como capacidad conceptual no implementada.
 
 ## Justificacion
 
-- PostgreSQL cubre bien la necesidad transaccional del MVP.
-- La estrategia vectorial evita introducir un almacen adicional temprano si no es necesario.
+- PostgreSQL cubre bien la necesidad transaccional del MVP y SQLite simplifica la demo local.
+- Un indice local reproducible permite demostrar retrieval semantico sin obligar una infraestructura vectorial gestionada temprana.
 - FHIR permite hablar de interoperabilidad sin falsear una integracion no implementada.
 
 ## Consecuencias
 
-- El prototipo local puede iniciar con repositorios simples mientras se conserva el contrato para una migracion posterior a `pgvector`.
+- El prototipo local persiste documentos y chunks en SQL, y guarda embeddings en un artefacto reproducible fuera de la base transaccional.
+- La migracion posterior a `pgvector` o un vector store gestionado no requiere redisenar los contratos del pipeline RAG.
 - La historia clinica real queda explicitamente fuera de alcance en la segunda entrega.

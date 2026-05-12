@@ -1,19 +1,7 @@
 # Red Flags for Escalation
 
-## Purpose
+Red flags include chest pain, chest pressure, shortness of breath, fainting, confusion, severe weakness, cyanosis, and rapid worsening over a short period. These patterns should trigger professional review even if the full diagnosis is unknown.
 
-This note lists generic red-flag categories to drive the escalation branch of the MVP. It is intentionally conservative and should not be interpreted as medical advice.
+A combination of chest discomfort and breathing difficulty deserves escalation because cardiorespiratory deterioration can evolve quickly. High intensity symptoms, recurrent episodes, or worsening after light effort should not remain only in self care messaging.
 
-## Red-flag categories
-
-- Breathing difficulty or rapid worsening reported by the user.
-- Altered consciousness or severe confusion.
-- Intense pain with functional impairment.
-- Persistent symptoms that do not improve with time or basic care.
-- Incomplete information combined with high uncertainty in the model output.
-
-## Expected system action
-
-- Set severity to `high` when one or more red-flag categories are present.
-- Force creation of an escalation case for professional review.
-- Preserve the source note as part of the recommendation trace.
+The platform should communicate that red flags increase risk and uncertainty. Escalation is appropriate when the system detects danger signals or when the evidence base repeatedly aligns with urgent observation patterns.

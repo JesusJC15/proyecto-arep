@@ -21,7 +21,8 @@ body {
 
 button,
 input,
-textarea {
+textarea,
+select {
   font: inherit;
 }
 
@@ -64,6 +65,15 @@ textarea {
   display: grid;
   gap: 0.9rem;
   margin-top: 2rem;
+}
+
+.session-card {
+  display: grid;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+  padding: 1rem;
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.04);
 }
 
 .nav-button {
@@ -173,13 +183,18 @@ label {
 }
 
 input,
-textarea {
+textarea,
+select {
   width: 100%;
   padding: 0.9rem 1rem;
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 0.9rem;
   color: inherit;
   background: rgba(6, 11, 20, 0.76);
+}
+
+select option {
+  color: #081221;
 }
 
 .chip-row {
@@ -209,6 +224,102 @@ textarea {
   padding: 1rem;
   border-radius: 1rem;
   background: rgba(6, 11, 20, 0.7);
+}
+
+.login-panel {
+  margin-bottom: 1.5rem;
+}
+
+.login-grid,
+.stacked-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.section-header,
+.actions-row {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.primary-button,
+.ghost-button,
+.text-button {
+  border: 0;
+  border-radius: 0.9rem;
+  cursor: pointer;
+}
+
+.primary-button,
+.ghost-button {
+  padding: 0.85rem 1rem;
+}
+
+.primary-button {
+  color: #081221;
+  background: #ffb78f;
+  font-weight: 700;
+}
+
+.ghost-button {
+  color: inherit;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.text-button {
+  padding: 0;
+  color: #ffb78f;
+  background: transparent;
+}
+
+.notice {
+  margin-top: 1rem;
+  padding: 0.9rem 1rem;
+  border-radius: 1rem;
+}
+
+.success-notice {
+  background: rgba(116, 255, 181, 0.14);
+  color: #aef4c8;
+}
+
+.error-notice {
+  background: rgba(255, 120, 120, 0.14);
+  color: #ffcece;
+}
+
+.details-card,
+.symptom-editor {
+  margin-top: 1rem;
+  padding: 1rem;
+  border-radius: 1rem;
+  background: rgba(6, 11, 20, 0.72);
+}
+
+.compact-grid {
+  margin: 0;
+}
+
+.case-card {
+  display: grid;
+  gap: 0.5rem;
+  width: 100%;
+  text-align: left;
+  border: 1px solid transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.case-card-active {
+  border-color: rgba(255, 183, 143, 0.4);
+}
+
+.case-card strong,
+.details-card strong {
+  color: #eff4f8;
 }
 
 .badge {
@@ -275,6 +386,11 @@ textarea {
   background: rgba(6, 11, 20, 0.72);
 }
 
+.contract-row code,
+.evidence-card a {
+  word-break: break-word;
+}
+
 .method {
   display: inline-flex;
   min-width: 54px;
@@ -301,5 +417,9 @@ code {
 
   .hero-metrics {
     flex-wrap: wrap;
+  }
+
+  .field-grid {
+    grid-template-columns: 1fr;
   }
 }

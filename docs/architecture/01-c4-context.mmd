@@ -1,13 +1,24 @@
+%%{init: {"theme": "base", "themeVariables": {"fontFamily": "Inter, Segoe UI, sans-serif", "primaryColor": "#E8F3FF", "primaryBorderColor": "#0F4C81", "lineColor": "#355070", "secondaryColor": "#EAFBF2", "tertiaryColor": "#FFF5E6"}}}%%
 flowchart LR
     patient["Paciente"]
     professional["Profesional de salud"]
-    platform["Plataforma inteligente de triaje medico"]
-    llm["Servicio LLM / Embeddings"]
-    kb["Base de conocimiento clinica"]
-    fhir["Adaptador FHIR (futuro)"]
+    platform["Plataforma AREP\nTriaje asistido por evidencia"]
+    llm["Proveedor LLM"]
+    kb["Base de conocimiento clinica\nMarkdown curado"]
+    fhir["Adaptador FHIR\nFase futura"]
 
-    patient -->|"Registra sintomas y consulta resultados"| platform
-    professional -->|"Revisa casos escalados"| platform
-    platform -->|"Genera recomendaciones"| llm
-    platform -->|"Recupera guias y protocolos"| kb
-    platform -.->|"Integra resumen clinico"| fhir
+    patient -->|"Registra sintomas y revisa recomendaciones"| platform
+    professional -->|"Atiende casos escalados"| platform
+    platform -->|"Genera recomendacion fundamentada"| llm
+    platform -->|"Recupera guias y red flags"| kb
+    platform -.->|"Integra interoperabilidad clinica"| fhir
+
+    classDef actor fill:#F3F6FB,stroke:#355070,stroke-width:1px,color:#1B263B;
+    classDef system fill:#EAFBF2,stroke:#2D6A4F,stroke-width:1px,color:#0B3D2E;
+    classDef external fill:#FFF5E6,stroke:#BC6C25,stroke-width:1px,color:#6F4518;
+    classDef future fill:#F7F7F7,stroke:#7A7A7A,stroke-dasharray: 4 3,color:#3E3E3E;
+
+    class patient,professional actor;
+    class platform system;
+    class llm,kb external;
+    class fhir future;

@@ -1,19 +1,7 @@
-# General Triage Guidance
+# General Triage Orientation
 
-## Purpose
+General triage starts by separating immediate danger from cases that allow observation or self care. High intensity pain, difficulty breathing, fainting, confusion, and rapid worsening should move the case away from routine guidance and toward professional review.
 
-This document defines a minimal academic corpus for the triage MVP. It is intended to support architecture, retrieval flow and traceability examples.
+Moderate symptoms without red flags can remain in watchful waiting if the patient receives clear warning signs, hydration guidance, rest advice, and an explicit recommendation to seek review if symptoms persist or intensify. Mild isolated symptoms with stable context can remain in self care with clear follow up instructions.
 
-## Example rules
-
-- Collect the main symptom, duration, intensity and associated warning signs.
-- Distinguish self-care scenarios from cases that require professional review.
-- Store the justification used to classify severity.
-- Escalate when the patient reports persistent worsening, functional limitation or uncertainty in the recommendation.
-
-## Structured evidence example
-
-- Domain: general practice
-- Audience: first-contact triage
-- Evidence type: curated project note
-- Production use: not allowed
+Any recommendation should preserve the distinction between detected severity, rationale, and supporting evidence. The decision is stronger when the same topic appears in the chief complaint, symptom list, and context notes.

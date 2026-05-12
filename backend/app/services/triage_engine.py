@@ -2,8 +2,8 @@ from __future__ import annotations
 
 from datetime import datetime, UTC
 
-from app.schemas.domain import ConsultationRecord, Recommendation, SeverityLevel, TriageResult
-from app.services.rag_service import rag_service
+from app.schemas.domain import ConsultationRecord, Recommendation, RetrievalTrace, SeverityLevel, TriageResult
+from app.services.rag_service import RAGService
 
 
 RED_FLAG_KEYWORDS = {
@@ -30,7 +30,10 @@ def _collect_terms(consultation: ConsultationRecord) -> list[str]:
     return [term for term in terms if term]
 
 
-def evaluate_consultation(consultation: ConsultationRecord) -> tuple[TriageResult, Recommendation]:
+def evaluate_consultation(
+    consultation: ConsultationRecord,
+    rag_service: RAGService,
+) -> tuple[TriageResult, Recommendation, RetrievalTrace]:
     joined_terms = " ".join(_collect_terms(consultation)).lower()
     highest_score = max(INTENSITY_SCORE.get(symptom.intensity, 1) for symptom in consultation.symptoms)
     has_red_flag = any(keyword in joined_terms for keyword in RED_FLAG_KEYWORDS)
@@ -52,7 +55,7 @@ def evaluate_consultation(consultation: ConsultationRecord) -> tuple[TriageResul
         rationale = "High symptom intensity or red-flag indicators require professional review."
         confidence = 0.61
 
-    evidence_sources = rag_service.retrieve(_collect_terms(consultation))
+    retrieval_trace = rag_service.retrieve(_collect_terms(consultation))
     recommendation_text = {
         SeverityLevel.LOW: (
             "The case can remain in self-care mode with explicit warning signs and follow-up advice."
@@ -70,12 +73,16 @@ def evaluate_consultation(consultation: ConsultationRecord) -> tuple[TriageResul
         decision=decision,
         rationale=rationale,
         confidence=confidence,
-        prompt_version="v0.1-academic-rag",
+        prompt_version="v0.2-demo-server",
     )
     recommendation = Recommendation(
         summary=recommendation_text,
-        disclaimer="Academic prototype only. This system does not replace professional clinical judgment.",
-        evidence_sources=evidence_sources,
+        disclaimer="Prototipo academico. Este sistema no reemplaza el juicio clinico profesional.",
+        evidence_sources=retrieval_trace.evidence_sources,
         generated_at=datetime.now(UTC),
+        retrieval_version=retrieval_trace.retrieval_version,
+        embedding_provider=retrieval_trace.embedding_provider,
+        embedding_model=retrieval_trace.embedding_model,
+        corpus_version=retrieval_trace.corpus_version,
     )
-    return triage_result, recommendation
+    return triage_result, recommendation, retrieval_trace

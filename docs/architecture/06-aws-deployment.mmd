@@ -1,29 +1,34 @@
+%%{init: {"theme": "base", "themeVariables": {"fontFamily": "Inter, Segoe UI, sans-serif", "primaryColor": "#E8F3FF", "primaryBorderColor": "#0F4C81", "lineColor": "#355070", "secondaryColor": "#EAFBF2", "tertiaryColor": "#FFF5E6"}}}%%
 flowchart TB
-    subgraph edge["Capa de acceso"]
+    subgraph edge["Edge y entrada"]
         cf["CloudFront"]
-        s3["S3 Frontend Hosting"]
+        s3["S3 Static Hosting\nReact SPA"]
         apigw["API Gateway"]
     end
 
-    subgraph services["Servicios aplicacion"]
-        ecs["ECS Fargate\nFastAPI Services"]
-        rag["RAG Worker / Orchestrator"]
+    subgraph services["Servicios de aplicacion"]
+        ecs["ECS Fargate\nFastAPI API"]
+        ecr["Amazon ECR\nBackend image"]
+        triage["Triage Engine"]
+        rag["RAG Service"]
     end
 
     subgraph data["Datos y conocimiento"]
         rds["Amazon RDS PostgreSQL"]
         os["OpenSearch / Vector Store"]
-        bucket["S3 Corpus Clinico"]
+        bucket["S3 Clinical Corpus"]
     end
 
     bedrock["Amazon Bedrock"]
     cw["CloudWatch"]
-    fhir["FHIR Adapter (futuro)"]
+    fhir["FHIR Adapter\nFase futura"]
 
     cf --> s3
     cf --> apigw
     apigw --> ecs
-    ecs --> rag
+    ecr --> ecs
+    ecs --> triage
+    triage --> rag
     ecs --> rds
     rag --> os
     rag --> bucket
@@ -31,3 +36,13 @@ flowchart TB
     ecs --> cw
     rag --> cw
     ecs -.-> fhir
+
+    classDef core fill:#EAFBF2,stroke:#2D6A4F,stroke-width:1px,color:#0B3D2E;
+    classDef edgeClass fill:#E8F3FF,stroke:#0F4C81,stroke-width:1px,color:#1B263B;
+    classDef dataClass fill:#FFF5E6,stroke:#BC6C25,stroke-width:1px,color:#6F4518;
+    classDef future fill:#F7F7F7,stroke:#7A7A7A,stroke-dasharray: 4 3,color:#3E3E3E;
+
+    class cf,s3,apigw edgeClass;
+    class ecs,ecr,triage,rag,bedrock,cw core;
+    class rds,os,bucket dataClass;
+    class fhir future;

@@ -1,0 +1,70 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: arep-postgres
+    environment:
+      POSTGRES_DB: ${AREP_POSTGRES_DB:-arep_demo}
+      POSTGRES_USER: ${AREP_POSTGRES_USER:-arep}
+      POSTGRES_PASSWORD: ${AREP_POSTGRES_PASSWORD:-arep}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${AREP_POSTGRES_USER:-arep} -d ${AREP_POSTGRES_DB:-arep_demo}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: arep-backend
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      AREP_ENV: ${AREP_ENV:-development}
+      AREP_DATABASE_URL: ${AREP_DATABASE_URL:-postgresql+psycopg://arep:arep@postgres:5432/arep_demo}
+      AREP_JWT_SECRET: ${AREP_JWT_SECRET:-phase4-demo-secret-with-32-characters}
+      AREP_SEED_DEMO_DATA: ${AREP_SEED_DEMO_DATA:-true}
+      AREP_CORS_ORIGINS: ${AREP_CORS_ORIGINS:-http://localhost:4173}
+      AREP_RAG_INDEX_ARTIFACT_PATH: ${AREP_RAG_INDEX_ARTIFACT_PATH:-/app/runtime/rag-index.json}
+      AREP_RAG_FORCE_REINDEX: ${AREP_RAG_FORCE_REINDEX:-false}
+    ports:
+      - "8000:8000"
+    volumes:
+      - backend_runtime:/app/runtime
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/ready', timeout=5).read()"
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://localhost:8000}
+    container_name: arep-frontend
+    depends_on:
+      backend:
+        condition: service_healthy
+    ports:
+      - "4173:80"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1/"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  postgres_data:
+  backend_runtime:

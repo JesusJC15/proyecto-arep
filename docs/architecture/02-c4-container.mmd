@@ -1,32 +1,50 @@
+%%{init: {"theme": "base", "themeVariables": {"fontFamily": "Inter, Segoe UI, sans-serif", "primaryColor": "#E8F3FF", "primaryBorderColor": "#0F4C81", "lineColor": "#355070", "secondaryColor": "#EAFBF2", "tertiaryColor": "#FFF5E6"}}}%%
 flowchart LR
-    subgraph channels["Canales"]
-        patient_web["Frontend paciente\nReact SPA"]
-        professional_web["Frontend profesional\nReact SPA"]
+    subgraph channels["Canales Web"]
+        patient_web["Frontend Paciente\nReact + Vite"]
+        professional_web["Frontend Profesional\nReact + Vite"]
     end
 
-    subgraph backend["Backend"]
-        api["FastAPI API"]
-        triage["Triage Orchestrator"]
-        rag["RAG Service"]
-        audit["Traceability / Audit"]
+    subgraph backend["Backend FastAPI (MVP)"]
+        api["API Router"]
+        authz["Dependencias de seguridad\nJWT + roles"]
+        triage["Motor de triaje"]
+        rag["Servicio RAG\nchunking + retrieval + ranking"]
     end
 
-    subgraph data["Persistencia"]
+    subgraph data_now["Datos actuales"]
+        sql["Repositorio SQL\nconsultas + corpus + chunks"]
+        corpus["Knowledge Base\nmanifest + clinical-guidelines"]
+        index["Indice local\nartifacts/rag-index.json"]
+    end
+
+    subgraph data_future["Datos objetivo (evolucion)"]
         postgres["PostgreSQL"]
         vector["pgvector / Vector Store"]
-        corpus["Corpus clinico curado"]
     end
 
-    model["Servicio LLM"]
-    fhir["FHIR Adapter (futuro)"]
+    llm["Proveedor LLM"]
+    fhir["FHIR Adapter\nFase futura"]
 
     patient_web --> api
     professional_web --> api
+    api --> authz
     api --> triage
+    api --> sql
     triage --> rag
-    triage --> audit
-    api --> postgres
-    rag --> vector
     rag --> corpus
-    rag --> model
+    rag --> index
+    rag --> llm
+    sql -.->|"despliegue target"| postgres
+    rag -.->|"ruta futura"| vector
     api -.-> fhir
+
+    classDef current fill:#EAFBF2,stroke:#2D6A4F,stroke-width:1px,color:#0B3D2E;
+    classDef edge fill:#E8F3FF,stroke:#0F4C81,stroke-width:1px,color:#1B263B;
+    classDef future fill:#F7F7F7,stroke:#7A7A7A,stroke-dasharray: 4 3,color:#3E3E3E;
+    classDef external fill:#FFF5E6,stroke:#BC6C25,stroke-width:1px,color:#6F4518;
+
+    class patient_web,professional_web,api,authz,triage,rag,sql,corpus,index current;
+    class channels,backend,data_now edge;
+    class postgres,vector,fhir,data_future future;
+    class llm external;

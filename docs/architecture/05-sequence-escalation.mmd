@@ -1,16 +1,31 @@
+%%{init: {"theme": "base", "themeVariables": {"fontFamily": "Inter, Segoe UI, sans-serif", "primaryColor": "#E8F3FF", "primaryBorderColor": "#0F4C81", "lineColor": "#355070", "secondaryColor": "#EAFBF2", "tertiaryColor": "#FFF5E6"}}}%%
 sequenceDiagram
+    autonumber
     actor Patient as Paciente
+    participant UI_P as Frontend Paciente
     participant API as FastAPI
-    participant TRIAGE as Triage Module
-    participant CASES as Professional Cases
-    participant PROF as Frontend Profesional
+    participant Store as InMemoryStore
+    actor Professional as Profesional
+    participant UI_PR as Frontend Profesional
 
-    Patient->>API: Solicita resultado de consulta
-    API->>TRIAGE: Evaluar umbral de riesgo
-    TRIAGE->>CASES: Crear caso escalado
-    TRIAGE-->>API: Estado escalated
-    API-->>Patient: Informar remision a profesional
-    PROF->>API: GET /professional/cases
-    API->>CASES: Obtener casos pendientes
-    CASES-->>API: Lista de casos escalados
-    API-->>PROF: Casos con evidencia y recomendacion
+    UI_P->>API: POST /consultations/{id}/triage
+    API->>Store: save_triage(...)
+    alt Riesgo alto o decision professional_review
+        Store->>Store: _create_escalation_case(...)
+        Store-->>API: ConsultationRecord (ESCALATED)
+        API-->>UI_P: Resultado + aviso de remision
+    else Riesgo bajo/medio
+        Store-->>API: ConsultationRecord (RECOMMENDED)
+        API-->>UI_P: Recomendacion de autocuidado/seguimiento
+    end
+
+    Professional->>UI_PR: Abre bandeja de casos
+    UI_PR->>API: GET /professional/cases
+    API->>Store: list_escalations()
+    Store-->>API: Casos pendientes
+    API-->>UI_PR: Lista resumida de casos
+
+    UI_PR->>API: GET /professional/cases/{case_id}
+    API->>Store: get_escalation(case_id)
+    Store-->>API: Caso con triage_result y recommendation
+    API-->>UI_PR: Detalle del caso para revision clinica
